@@ -1,0 +1,111 @@
+{
+     "PosLib": {
+          "address": "0xe5D05F0C52DAe635B8bd2e5AFAF5c72369920B39"
+     },
+     "CommonTool": {
+          "address": "0x813A7b85090aA563a46b040135014470E60DC19F"
+     },
+     "StoremanUtil": {
+          "address": "0x9AC6492c22AF58f81f04C23aaA700E73856a9Be6"
+     },
+     "StoremanLib": {
+          "address": "0x6d7cdcbAa90f9C5ffEB8C22F1a58cAE2b476095A"
+     },
+     "IncentiveLib": {
+          "address": "0xb7B54A4b2Be8265F993E7842449494Ec2c3d1301"
+     },
+     "Deposit": {
+          "address": "0x0146263b16Ef54D599993E2DA4f0EC732C579920"
+     },
+     "StoremanGroupProxy": {
+          "address": "0x4E20cb6E4628d984b6b45F9966CDcB782CB63F31",
+          "abi": "abi.StoremanGroupDelegate.json"
+     },
+     "ListGroup": {
+          "address": "0x8113a9373BD319A05b607747f396CA8e78e8F5B9",
+          "abi": "abi.ListGroup.json"
+     },
+     "MetricLib": {
+          "address": "0x3f036434070E7bdD01ca706cf096467409F8d0DD"
+     },
+     "MetricProxy": {
+          "address": "0xd5e61e4069c013a444e962dbd489d845b9Ae2727",
+          "abi": "abi.MetricDelegate.json"
+     },
+     "MetricDelegate": {
+          "address": "0xBfF6A03dEA98ACEC913DA4daf80953fd49060305",
+          "abi": "abi.MetricDelegate.json"
+     },
+     "GpkLib": {
+          "address": "0x3eBad852678b07AE81389E6807826954427BF65B"
+     },
+     "GpkProxy": {
+          "address": "0xFC86Ad558163C4933eBCfA217945aF6e9a3bcE06",
+          "abi": "abi.GpkDelegate.json"
+     },
+     "GpkDelegate": {
+          "address": "0xDF32031800977B25780cF613571356C609DCad36",
+          "abi": "abi.GpkDelegate.json"
+     },
+     "ConfigProxy": {
+          "address": "0x2C0134788652A8C5fC6EC5c6a9B157E8481F5118",
+          "abi": "abi.ConfigDelegate.json"
+     },
+     "ConfigDelegate": {
+          "address": "0xc1c651083B5F4f47f57702deBe2a98030e7BaDd7",
+          "abi": "abi.ConfigDelegate.json"
+     },
+     "Secp256k1Curve": {
+          "address": "0x0044C722F89B05087D15Eb7Df27c4Aff72265755"
+     },
+     "Bn256Curve": {
+          "address": "0xCe601Ee7F759E5090aa6Dcb53a627Fe4132b65D7"
+     },
+     "TokenManagerProxy": {
+          "address": "0xF71140362c89dE181dfF2D1b42bF9409a2D28582",
+          "abi": "abi.TokenManagerDelegate.json"
+     },
+     "TokenManagerDelegate": {
+          "address": "0x6D077eAA33063F33968D9511Cbc617D2b9fC2559",
+          "abi": "abi.TokenManagerDelegate.json"
+     },
+     "QuotaProxy": {
+          "address": "0xB9f1c7A1A4053b7079B93EA7FB3A0C2a912bDA8C",
+          "abi": "abi.QuotaDelegate.json"
+     },
+     "QuotaDelegate": {
+          "address": "0xeC2dcCb8f67FAF3571E4F553AC1AB00B68EeD4bb",
+          "abi": "abi.QuotaDelegate.json"
+     },
+     "OracleProxy": {
+          "address": "0xe941F4BCcBdF08460499c51b31d1f7823Bbd6a1f",
+          "abi": "abi.OracleDelegate.json"
+     },
+     "OracleDelegate": {
+          "address": "0xBeD32cdCA356554bB24a0dFE757DDF152F7bfbfD",
+          "abi": "abi.OracleDelegate.json"
+     },
+     "HTLCTxLib": {
+          "address": "0x394884E4BD18b9d5D66Ea1446962cce99096B009"
+     },
+     "HTLCDebtLib": {
+          "address": "0xa257B5378d0665Dc77959086f04A27A16795Bc40"
+     },
+     "RapidityLib": {
+          "address": "0x4edbF29ABAD056472F9D238bb094eeeF57eF31f4"
+     },
+     "CrossProxy": {
+          "address": "0xEA5176FD4a32c6Ba51FC3feaD906D9f2AC2855b6",
+          "abi": "abi.CrossDelegate.json"
+     },
+     "SignatureVerifier": {
+          "address": "0x052EFc813DE26D4728410e66b60608b7B1cC1D85",
+          "abi": "abi.SignatureVerifier.json"
+     },
+     "Bn128SchnorrVerifier": {
+          "address": "0x7cE09c14d795F4D2786f7EFacd3e59F9f7F4eC6f"
+     },
+     "Secp256k1SchnorrVerifier": {
+          "address": "0x743D33dDd8dBbAc303587c2e367Fa17F40eC62ee"
+     }
+}
