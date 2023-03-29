@@ -120,7 +120,7 @@ async function spendByTxb(unspent, signer, spenderWit, toRest, to, amount = 1000
     txb.setVersion(1)
     
     // Add input
-    txb.addInput(unspent.txId, unspent.vout)
+    txb.addInput(unspent.txid, unspent.vout)
   
     // Add output
     txb.addOutput(toRest, unspent.value - amount - fee)
@@ -151,7 +151,7 @@ async function spendByTxb(unspent, signer, spenderWit, toRest, to, amount = 1000
 
     // add input
     psbt.addInput({
-      hash: unspent.txId,
+      hash: unspent.txid,
       index: unspent.vout,
       witnessUtxo: {
         // OP_HASH160 OP_14 + hash160() +  OP_EQUAL
@@ -346,11 +346,11 @@ async function spendByPsbt(opt) {
     console.log('P2SH address:')
     console.log(p2sh.address)
 
-    const txId = '4e86d5c5d4a22b58eee8b530d7725927809b50ac2076a439da2e722ab1aadddd'
-    const tx = await client.getTransaction(txId)
+    const txid = '4e86d5c5d4a22b58eee8b530d7725927809b50ac2076a439da2e722ab1aadddd'
+    const tx = await client.getTransaction(txid)
     const psbt = new bitcoin.Psbt({network})
       .addInput({
-        hash: txId,
+        hash: txid,
         index: 1,
         nonWitnessUtxo: Buffer.from(tx.hex, 'hex'),
         redeemScript: Buffer.from(redeemScript, 'hex')
@@ -714,17 +714,17 @@ async function spendByPsbt(opt) {
 const spends = {
   'mockGpk': [
     {
-      txId: '6547992f303582114e6cd8864a9a0c1fb1c119beae6f244b3b97b1caa15285ed',
+      txid: '6547992f303582114e6cd8864a9a0c1fb1c119beae6f244b3b97b1caa15285ed',
       vout: 1,
       value: 300000,
     },
     {
-      txId: '291f2cd63e898e0c225ae73d35c9fc3b8c69904830f805106d88290e2cd41686',
+      txid: '291f2cd63e898e0c225ae73d35c9fc3b8c69904830f805106d88290e2cd41686',
       vout: 1,
       value: 298700,
     },
     {
-      txId: '54b282c7a2610d83ab603e39c2dba5c56af927e7cb691988c2241da2d1aedcbd',
+      txid: '54b282c7a2610d83ab603e39c2dba5c56af927e7cb691988c2241da2d1aedcbd',
       vout: 1,
       value: 297400,
     },
@@ -732,7 +732,7 @@ const spends = {
   'mockGpk2': [
     {
       // p2tr tb1pq7ugf7g662f2y9n9nuvmk8r4q88lwhyk6agcmyr8mjc3crl2w7lsp7xcuj
-      txId: '74891ab927fd451ab1cb865306f22e6193d11bb1c96478bb8d8b71d1d816ad8c',
+      txid: '74891ab927fd451ab1cb865306f22e6193d11bb1c96478bb8d8b71d1d816ad8c',
       vout: 1,
       value: 100000,
     }
@@ -740,7 +740,7 @@ const spends = {
   'p2sh': [
     {
       // 2N7WfHK1ftrTdhWej8rnFNR7guhvhfGWwFR
-      txId: '4e86d5c5d4a22b58eee8b530d7725927809b50ac2076a439da2e722ab1aadddd',
+      txid: '4e86d5c5d4a22b58eee8b530d7725927809b50ac2076a439da2e722ab1aadddd',
       vout: 1,
       value: 2000,
     },
@@ -748,69 +748,69 @@ const spends = {
   'alice': [
     {
       // tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txId: '6547992f303582114e6cd8864a9a0c1fb1c119beae6f244b3b97b1caa15285ed',
+      txid: '6547992f303582114e6cd8864a9a0c1fb1c119beae6f244b3b97b1caa15285ed',
       vout: 0,
       value: 724678,
     },
     {
       // mx5ijhZuU9Eq49hnEryiGJUVBr9T7NBaTh
-      txId: '1b7657e4f160da4d2814b0dd080dbb267f64c1e0fb2c973904f5056e7a58cf91',
+      txid: '1b7657e4f160da4d2814b0dd080dbb267f64c1e0fb2c973904f5056e7a58cf91',
       vout: 0,
       value: 1024978,
     },
     {
       // mx5ijhZuU9Eq49hnEryiGJUVBr9T7NBaTh
-      txId: '1b7657e4f160da4d2814b0dd080dbb267f64c1e0fb2c973904f5056e7a58cf91',
+      txid: '1b7657e4f160da4d2814b0dd080dbb267f64c1e0fb2c973904f5056e7a58cf91',
       vout: 0,
       value: 1024978,
     },
     {
-      txId: '1cf9816a07f500d29c9807e5a1d89dc63f64478675c675ed94a2777b44015ca9',
+      txid: '1cf9816a07f500d29c9807e5a1d89dc63f64478675c675ed94a2777b44015ca9',
       vout: 1,
       value: 7607,
     },
     {
-      txId: '24dbe4742f4f36f563f090de9b86a3d7f138f588bace33371529fe583e5c756b',
+      txid: '24dbe4742f4f36f563f090de9b86a3d7f138f588bace33371529fe583e5c756b',
       vout: 1,
       value: 100,
     },
     {
-      txId: '7fb02fd7534e27b760bdc5687083cbd3334509673a9e48fd689077efb8fd47de',
+      txid: '7fb02fd7534e27b760bdc5687083cbd3334509673a9e48fd689077efb8fd47de',
       vout: 0,
       value: 6307,
     },
     {
       // wit
-      txId: '76690a446d84c85bf384bd92076aca1f28fcabe84d13c65ec2dda900fda7df6d',
+      txid: '76690a446d84c85bf384bd92076aca1f28fcabe84d13c65ec2dda900fda7df6d',
       vout: 1,
       value: 1327878,
     },
     {
-      txId: '678e63a323c81593e0f633873ea9b461942270b23c2e3f8fc5040f8f0e7ec27f',
+      txid: '678e63a323c81593e0f633873ea9b461942270b23c2e3f8fc5040f8f0e7ec27f',
       vout: 0,
       value: 1326578,
     },
     {
       // p2sh-p2wpkh, , 2NFer9f5uZzTMttb6aeYvCyGJeAR3YsNued
-      txId: 'a51f9da7c1f9ddb027cd2f20b690e7c33ee421c409c7086ddcc3bb695a33f438',
+      txid: 'a51f9da7c1f9ddb027cd2f20b690e7c33ee421c409c7086ddcc3bb695a33f438',
       vout: 1,
       value: 1386387,
     },
     {
       // wit tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txId: 'bde39b6d6508a8d7953455c638be3028466c1ef8ce719143e7f43c2d74c502e7',
+      txid: 'bde39b6d6508a8d7953455c638be3028466c1ef8ce719143e7f43c2d74c502e7',
       vout: 0,
       value: 1325278,
     },
     {
-      txId: '836f9387d0386a49971d7d5403ec98da0df12c5104c4d6c691fde3c3b0920e24',
+      txid: '836f9387d0386a49971d7d5403ec98da0df12c5104c4d6c691fde3c3b0920e24',
       vout: 0,
       value: 5007,
     },
   ],
   'bob': [
     {
-      txId: '7fb02fd7534e27b760bdc5687083cbd3334509673a9e48fd689077efb8fd47de',
+      txid: '7fb02fd7534e27b760bdc5687083cbd3334509673a9e48fd689077efb8fd47de',
       vout: 1,
       value: 1000,
     },
@@ -822,7 +822,7 @@ const unSpends = {
     {
       pub: "0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8",
       // p2tr address : tb1pjgu5q0xp804ju7x97qpw7gdms3ufzrdv6fnnnjtn8f2fwp6ecfcq9udfju
-      txId: '1b7657e4f160da4d2814b0dd080dbb267f64c1e0fb2c973904f5056e7a58cf91',
+      txid: '1b7657e4f160da4d2814b0dd080dbb267f64c1e0fb2c973904f5056e7a58cf91',
       vout: 1,
       value: 300000,
     },
@@ -834,7 +834,7 @@ const unSpends = {
     // wit address: tb1ql3c8emstnczhydeujkqq3zw4g0zx0hzpp3k9e8
     // address: n4XjLCVsKDmoQztgbRNwFnYeb56mwJJqKS
     {
-      txId: '0bf37594925083ade7a909ac193620836f6754a9541151c3303a065e80af2710',
+      txid: '0bf37594925083ade7a909ac193620836f6754a9541151c3303a065e80af2710',
       vout: 1,
       value: 296100,
     },
@@ -849,7 +849,7 @@ const unSpends = {
     // p2tr: tb1pq7ugf7g662f2y9n9nuvmk8r4q88lwhyk6agcmyr8mjc3crl2w7lsp7xcuj
     {
       // p2tr tb1pq7ugf7g662f2y9n9nuvmk8r4q88lwhyk6agcmyr8mjc3crl2w7lsp7xcuj
-      txId: '29ad89739fc36b117f8b5f181299709300ede578af4b6a39c53754d69ad5ac8d',
+      txid: '29ad89739fc36b117f8b5f181299709300ede578af4b6a39c53754d69ad5ac8d',
       vout: 1,
       value: 98700,
     }
@@ -857,7 +857,7 @@ const unSpends = {
   'p2sh': [
     {
       // 2N7WfHK1ftrTdhWej8rnFNR7guhvhfGWwFR
-      txId: '129fd92a6296a99416d36ee2d8d9b851c75fa09aee49b070c14127c49095571b',
+      txid: '129fd92a6296a99416d36ee2d8d9b851c75fa09aee49b070c14127c49095571b',
       vout: 1,
       value: 1300,
     },
@@ -865,20 +865,20 @@ const unSpends = {
   'alice': [
     {
       // tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txId: '74891ab927fd451ab1cb865306f22e6193d11bb1c96478bb8d8b71d1d816ad8c',
+      txid: '74891ab927fd451ab1cb865306f22e6193d11bb1c96478bb8d8b71d1d816ad8c',
       vout: 0,
       value: 624378,
     },
     {
       // p2sh-p2wpkh, from 2NFer9f5uZzTMttb6aeYvCyGJeAR3YsNued, to tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txId: 'c93a92ec3fef6e7c0c9d1b896405616dd82065b3b02c542a3fa38b2e16cadb83',
+      txid: 'c93a92ec3fef6e7c0c9d1b896405616dd82065b3b02c542a3fa38b2e16cadb83',
       vout: 0,
       value: 1385087,
     }
   ],
   'bob': [
     {
-      txId: '24dbe4742f4f36f563f090de9b86a3d7f138f588bace33371529fe583e5c756b',
+      txid: '24dbe4742f4f36f563f090de9b86a3d7f138f588bace33371529fe583e5c756b',
       vout: 0,
       value: 600,
     },
@@ -937,7 +937,7 @@ setTimeout(async () => {
 
   // await spendByTxb(unSpends.alice[0], alice, aliceWit, aliceOld.address, bobOld.address, 1000, 300, 'segwit-p2sh')
   // await spendByPsbt({
-  //   txid: unSpends.alice[0].txId,
+  //   txid: unSpends.alice[0].txid,
   //   vout: unSpends.alice[0].vout,
   //   value: unSpends.alice[0].value,
   //   alice,
@@ -949,7 +949,7 @@ setTimeout(async () => {
 
   // 从wit地址 花钱 打钱
   // await spendByPsbt({
-  //   txid: unSpends.alice[0].txId,
+  //   txid: unSpends.alice[0].txid,
   //   vout: unSpends.alice[0].vout,
   //   value: unSpends.alice[0].value,
   //   alice,
@@ -961,7 +961,7 @@ setTimeout(async () => {
   // 从wit地址 花钱 打钱
 
   // await spendByPsbt({
-  //   txid: unSpends.alice[2].txId,
+  //   txid: unSpends.alice[2].txid,
   //   vout: unSpends.alice[2].vout,
   //   value: unSpends.alice[2].value,
   //   alice,
@@ -972,7 +972,7 @@ setTimeout(async () => {
   // })
 
   // await spendByPsbt({
-  //   txid: unSpends.alice[0].txId,
+  //   txid: unSpends.alice[0].txid,
   //   vout: unSpends.alice[0].vout,
   //   value: unSpends.alice[0].value,
   //   alice,
@@ -985,7 +985,7 @@ setTimeout(async () => {
   // })
 
   // await spendByPsbt({
-  //   txid: unSpends.alice[0].txId,
+  //   txid: unSpends.alice[0].txid,
   //   vout: unSpends.alice[0].vout,
   //   value: unSpends.alice[0].value,
   //   alice,
@@ -996,7 +996,7 @@ setTimeout(async () => {
   // })
 
   // await spendByPsbt({
-  //   txid: unSpends.mockGpk[0].txId,
+  //   txid: unSpends.mockGpk[0].txid,
   //   vout: unSpends.mockGpk[0].vout,
   //   value: unSpends.mockGpk[0].value,
   //   gpk: mockGpk,
@@ -1009,7 +1009,7 @@ setTimeout(async () => {
   // })
 
   await spendByPsbt({
-    txid: unSpends.mockGpk[0].txId,
+    txid: unSpends.mockGpk[0].txid,
     vout: unSpends.mockGpk[0].vout,
     value: unSpends.mockGpk[0].value,
     gpk: mockGpk,
@@ -1023,7 +1023,7 @@ setTimeout(async () => {
 
 
   // await spendByPsbt({
-  //   txid: unSpends.mockGpk[0].txId,
+  //   txid: unSpends.mockGpk[0].txid,
   //   vout: unSpends.mockGpk[0].vout,
   //   value: unSpends.mockGpk[0].value,
   //   gpk: mockGpk,
@@ -1037,7 +1037,7 @@ setTimeout(async () => {
   // Private2Address()
 
   // await spendByPsbt({
-  //   txid: unSpends.alice[2].txId,
+  //   txid: unSpends.alice[2].txid,
   //   vout: unSpends.alice[2].vout,
   //   value: unSpends.alice[2].value,
   //   alice,
@@ -1049,7 +1049,7 @@ setTimeout(async () => {
 
   // // spend p2tr
   // await spendByPsbt({
-  //   txid: unSpends.alice[2].txId,
+  //   txid: unSpends.alice[2].txid,
   //   vout: unSpends.alice[2].vout,
   //   value: unSpends.alice[2].value,
   //   alice,
@@ -1062,7 +1062,7 @@ setTimeout(async () => {
 
   /// send to p2tr
   // await spendByPsbt({
-  //   txid: unSpends.alice[1].txId,
+  //   txid: unSpends.alice[1].txid,
   //   vout: unSpends.alice[1].vout,
   //   value: unSpends.alice[1].value,
   //   alice,

@@ -31,6 +31,135 @@ const usedNetwork = "testnet"
 const network = bitcoin.networks[usedNetwork]
 const btcConfig = options[usedNetwork]
 
+function idToHash(txid) {
+  return Buffer.from(txid, 'hex').reverse();
+}
+
+function toUnit(amount, decimals = 8) {
+  const unit = Math.pow(10, decimals)
+  return Math.floor(amount * unit)
+}
+
+function getHash(id, user) {
+  console.log("getHash id = %s",id)
+  console.log("getHash user = %s", user)
+  if (!id.startsWith('0x')) {
+      id = '0x' + id;
+  }
+  if (!user.startsWith('0x')) {
+      user = '0x' + user;
+  }
+  const hash = crypto.createHash('sha256');
+  hash.update(id + user);
+  let ret = hash.digest('hex');
+  console.log('getHash id = %s user=%s hash(id,user)', id, user, ret);
+  if (ret.startsWith('0x')) {
+      ret = ret.slice(2);
+  }
+  return ret;
+}
+
+const toXOnly = pubKey => {
+  if (!(pubKey instanceof Buffer)) {
+    return null
+  }
+
+  if (pubKey.length === 32) {
+    return pubKey
+  }
+
+  if (pubKey.length === 33 || pubKey.length === 65) {
+    return pubKey.slice(1, 33)
+  }
+
+  if (pubKey.length === 64) {
+    return pubKey.slice(0, 32)
+  }
+
+  return null
+}
+function tapTweakHash(pubKey, h) {
+  return bitcoin.crypto.taggedHash(
+    'TapTweak',
+    Buffer.concat(h ? [pubKey, h] : [pubKey]),
+  );
+}
+function tweakSigner(signer, opts) {
+  let privateKey= signer.privateKey
+  if (!privateKey) {
+    throw new Error('Private key is required for tweaking signer!');
+  }
+  if (signer.publicKey[0] === 3) {
+    privateKey = ecc.privateNegate(privateKey);
+  }
+
+  const tweakedPrivateKey = ecc.privateAdd(
+    privateKey,
+    tapTweakHash(toXOnly(signer.publicKey), opts.tweakHash),
+  );
+  if (!tweakedPrivateKey) {
+    throw new Error('Invalid tweaked private key!');
+  }
+
+  return ECPair.fromPrivateKey(Buffer.from(tweakedPrivateKey), {
+    network: opts.network,
+  });
+}
+
+function tweakPublicKey(xPublicKey) {
+  const tweakedHash = tapTweakHash(xPublicKey)
+  const tweakedPublicKey = ecc.xOnlyPointAddTweak(xPublicKey, tweakedHash)
+  console.log(`tweaked public key is ${tweakedPublicKey.xOnlyPubkey.toString('hex')}`)
+}
+
+function hexTrip0x(hexs) {
+  if (0 == hexs.indexOf('0x')) {
+      return hexs.slice(2);
+  }
+  return hexs;
+}
+
+function getOtaP2shRedeemScript(randomId, userAccount, MPC_PK) {
+  let randomHash = getHash(randomId, userAccount);
+  let pkBuffer = MPC_PK instanceof Buffer ? MPC_PK : Buffer.from(MPC_PK, 'hex') 
+  if (MPC_PK.length === 64) {
+    pkBuffer = Buffer.concat([Buffer(4), pkBuffer])
+  } 
+  if (MPC_PK.length !== 33 && MPC_PK.length !== 65) {
+    throw new Error(`${MPC_PK} is not a valid public key`)
+  }
+  return bitcoin.script.fromASM(
+    `
+    ${hexTrip0x(randomHash)}
+    OP_DROP
+    OP_DUP
+    OP_HASH160
+    ${bitcoin.crypto.hash160(pkBuffer).toString('hex')}
+    OP_EQUALVERIFY
+    OP_CHECKSIG
+    `.trim()
+      .replace(/\s+/g, ' '),
+  )
+}
+
+function getOtaP2trRedeemScript(randomId, userAccount, MPC_PK) {
+  let randomHash = getHash(randomId, userAccount);
+  let pkBuffer = MPC_PK instanceof Buffer ? MPC_PK : Buffer.from(MPC_PK, 'hex') 
+  let xOnlyMpcPk = toXOnly(pkBuffer)
+  return bitcoin.script.fromASM(
+    `
+  ${hexTrip0x(randomHash)}
+  OP_DROP
+  OP_DUP
+  OP_HASH160
+  ${bitcoin.crypto.hash160(Buffer.from(xOnlyMpcPk, 'hex')).toString('hex')}
+  OP_EQUALVERIFY
+  OP_CHECKSIG
+  `.trim()
+      .replace(/\s+/g, ' '),
+  )
+}
+
 process.on('uncaughtException', error => {
   console.log(`uncaughtException ${error}`)
 });

@@ -66,10 +66,6 @@ async function queryActionInfo(address) {
 
 async function main() {
     try{
-        // let tagInfo = await faucet()
-        // console.log("tagInfo:", tagInfo.data)
-        // let ret = await getInfo(tagInfo.data.tagId)
-        // console.log("ret:", ret.data)
         await addAddrInfo()
     }catch(err){
         if(err.response) {

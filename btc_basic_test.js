@@ -95,13 +95,53 @@ function getP2trKeySpendAddress(storemanPk, network) {
     return p2tr.address
 }
 
+function getSmgRedeemScript(xOnlyMpcPk) {
+  const redeemScript = bitcoin.script.fromASM(
+    `
+    OP_DUP
+    OP_HASH160
+    ${bitcoin.crypto.hash160(xOnlyMpcPk).toString('hex')}
+    OP_EQUALVERIFY
+    OP_CHECKSIG
+    `.trim().replace(/\s+/g, ' '),
+  )
+
+  return redeemScript
+}
+
+function getSmgP2trAddress(storemanPk, network) {
+  const xOnlyMpcPk = getXBytes(storemanPk)
+  const redeemScript = getSmgRedeemScript(storemanPk)
+  const scriptTree = {
+    output: redeemScript,
+    version: 0xc0
+  }
+
+  const p2tr = bitcoin.payments.p2tr({ 
+      internalPubkey: xOnlyMpcPk,
+      scriptTree: scriptTree,
+      redeem: scriptTree,
+      network 
+    })
+  return p2tr.address
+}
+
 // ota tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp
 const testGetKeySpendP2trAddress = async() => {
   // sm tb1plkyl42e39xfkd7m2megaejuyvf80w66qrzc7rjf64sv4mxz5qmuslpsn69
   const gpk = '0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8'
 
   const address = getP2trKeySpendAddress(gpk, network)
-  console.log(`testGetKeySpendP2trAddress ${address}, ${network}`)
+  console.log(`testGetKeySpendP2trAddress ${address}`)
+}
+
+
+const testGetSmgP2trAddress = async() => {
+  // sm tb1plkyl42e39xfkd7m2megaejuyvf80w66qrzc7rjf64sv4mxz5qmuslpsn69
+  const gpk = '0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8'
+
+  const address = getSmgP2trAddress(gpk, network)
+  console.log(`testGetKeySpendP2trAddress ${address}`)
 }
 
 const testImportAddress = async() => {
@@ -220,6 +260,7 @@ setTimeout(async ()=> {
   // const p2 = await testGetP2trAddress()
   // const info = await testGetAddressInfo(p2.pkh)
 
-  await testDescriptors()
+  // await testDescriptors()
+  await testGetSmgP2trAddress()
   console.log('*** end')
 }, 0)
