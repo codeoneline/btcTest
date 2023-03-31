@@ -342,6 +342,24 @@ const spends = {
       vout: 0,
       value: 1,
     },
+    {
+      // p2shtr  tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc
+      txid: 'b86d40f67f1464cfc67f7960f153168ac5a497f888fca45870d0b314da91b7a8',
+      vout: 1,
+      value: 3506,
+    },
+    {
+      // p2shtr  tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc
+      txid: 'd2ca2db82b3413fbe6ce2bf2cb41f9f712731f54aaa0894c18dd0b78f102fedf',
+      vout: 1,
+      value: 3319,
+    },
+    {
+      // p2shtr  tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc
+      txid: 'd2ca2db82b3413fbe6ce2bf2cb41f9f712731f54aaa0894c18dd0b78f102fedf',
+      vout: 0,
+      value: 1,
+    },
   ],
 }
 
@@ -358,9 +376,15 @@ const unSpends = {
     // 51b4853607607b740c1783e45835bb53ed6b0ece0d072bef09b77c3f13f3dafa
     {
       // p2shtr  tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc
-      txid: 'b86d40f67f1464cfc67f7960f153168ac5a497f888fca45870d0b314da91b7a8',
+      txid: '90e792df9bfdf3bbfb0de779e376df149b75df4820b19fa9b28aca0924fe7ffa',
+      vout: 0,
+      value: 1,
+    },
+    {
+      // p2shtr  tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc
+      txid: '90e792df9bfdf3bbfb0de779e376df149b75df4820b19fa9b28aca0924fe7ffa',
       vout: 1,
-      value: 3506,
+      value: 3319,
     },
     {
       // p2shtr  tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc

@@ -16,6 +16,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "taproot",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/taproot.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "btc_address",
       "skipFiles": [
         "<node_internals>/**"
