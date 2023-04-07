@@ -3,6 +3,7 @@ const Client = require('bitcoin-core')
 const ECPAIR = require('ecpair')
 const psbtUtils = require('bitcoinjs-lib/src/psbt/psbtutils')
 const bscript = require('bitcoinjs-lib/src/script')
+const bip341 = require('bitcoinjs-lib/src/payments/bip341')
 
 const crypto = require('crypto');
 const BigNumber = require('bignumber.js')
@@ -222,37 +223,74 @@ async function spendByPsbt(opt) {
   const preAmount = toUnit(utxo.value)
 
 
-const hashType = bitcoin.Transaction.SIGHASH_ALL;
-const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
+  const hashType = bitcoin.Transaction.SIGHASH_ALL;
+  const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
 
+  const rawTx1 = await client.getRawTransaction(unSpends.alice[1].txid, 1)
   if (opt.txType === 'p2pkh') {
     // good
     const psbt = new bitcoin.Psbt({network})
-      .addInput({
-        hash: opt.txid,
-        index: opt.vout,
-        nonWitnessUtxo: Buffer.from(rawTx.hex, 'hex')
-      }) 
-      .addOutput({
-        address: from,
-        value: preAmount - opt.amount - opt.fee,
-      })
-      .addOutput({
-        address: to ,
-        value: opt.amount,
-      })
+    .addInput({
+      hash: opt.txid,
+      index: opt.vout,
+      nonWitnessUtxo: Buffer.from(rawTx.hex, 'hex')
+    }) 
+    .addInput({
+      hash: unSpends.alice[1].txid,
+      index: unSpends.alice[1].vout,
+      nonWitnessUtxo: Buffer.from(rawTx1.hex, 'hex')
+    }) 
+    .addOutput({
+      address: from,
+      value: preAmount - opt.amount - opt.fee,
+    })
+    .addOutput({
+      address: to ,
+      value: opt.amount,
+    })
 
-    psbt.signInput(0, opt.sender)
-    // psbt.validateSignaturesOfInput(0)
+    const isMpc = false
+    if (isMpc) {
+      const keyPair = {
+        publicKey: opt.sender.publicKey,
+        // sign: () => {}
+      }
+      const sigHash = psbt.__CACHE.__TX.hashForSignature(0, fromOutScript, hashType)
+      const signature = opt.sender.sign(sigHash)
+      const partialSig = [
+        {
+          pubkey: keyPair.publicKey,
+          signature: bscript.signature.encode(signature, hashType),
+        },
+      ]
+      psbt.data.updateInput(0, { partialSig })
 
-    psbt.finalizeAllInputs()
+      const sigHash1 = psbt.__CACHE.__TX.hashForSignature(1, fromOutScript, hashType)
+      const signature1 = opt.sender.sign(sigHash1)
+      const partialSig1 = [
+        {
+          pubkey: keyPair.publicKey,
+          signature: bscript.signature.encode(signature1, hashType),
+        },
+      ]
+      psbt.data.updateInput(1, { partialSig: partialSig1 })
+      
+      psbt.finalizeAllInputs()
+
+    } else {
+      psbt.signInput(0, opt.sender)
+      psbt.signInput(1, opt.sender)
+      // psbt.validateSignaturesOfInput(0)
+  
+      psbt.finalizeAllInputs()
+    }
     const txHex = psbt.extractTransaction().toHex()
 
     console.log('Transaction hexadecimal:')
     console.log(txHex)
 
-    // const txRet = await client.sendRawTransaction(txHex)
-    // console.log("psbt p2pkh broad tx:", txRet)
+    const txRet = await client.sendRawTransaction(txHex)
+    console.log("psbt p2pkh broad tx:", txRet)
   } else if (opt.txType === 'p2sh-p2wpkh') {
     // good
     const p2wpkhAlice1 = bitcoin.payments.p2wpkh({pubkey: opt.sender.publicKey, network}) 
@@ -310,6 +348,16 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
           value: preAmount,
         }
       })
+      .addInput({
+        hash: unSpends.alice[1].txid,
+        index: unSpends.alice[1].vout,
+        nonWitnessUtxo: Buffer.from(rawTx1.hex, 'hex'),
+        witnessUtxo: {
+          // fromOutScript = Buffer.from('0014' + opt.sender.pubKeyHash, 'hex')
+          script: fromOutScript,
+          value: 1,
+        }
+      }) 
       .addOutput({
         address: from,
         // script: fromOutScript,
@@ -321,10 +369,44 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
         value: opt.amount,
       })
 
-      psbt.signInput(0, opt.sender)
-      psbt.validateSignaturesOfInput(0)
-  
-      psbt.finalizeAllInputs()
+      const isMpc = true
+      if (isMpc) {
+        let signingScript = bitcoin.payments.p2pkh({ hash: fromOutScript.slice(2)}).output;
+        const sigHash = psbt.__CACHE.__TX.hashForWitnessV0(0, signingScript, preAmount, hashType)
+        let signature = opt.sender.sign(sigHash)
+        const keyPair = {
+          publicKey: opt.sender.publicKey,
+          // sign: () => {},
+        }
+        const partialSig = [
+          {
+            pubkey: keyPair.publicKey,
+            signature: bscript.signature.encode(signature, hashType),
+          },
+        ]
+        psbt.data.updateInput(0, { partialSig })
+
+        const sigHash1 = psbt.__CACHE.__TX.hashForWitnessV0(1, signingScript, 1, hashType)
+        let signature1 = opt.sender.sign(sigHash1)
+        const keyPair1 = {
+          publicKey: opt.sender.publicKey,
+          // sign: () => {},
+        }
+        const partialSig1 = [
+          {
+            pubkey: keyPair1.publicKey,
+            signature: bscript.signature.encode(signature1, hashType),
+          },
+        ]
+        psbt.data.updateInput(1, { partialSig: partialSig1 })
+
+        psbt.finalizeAllInputs()
+      } else {
+        psbt.signInput(0, opt.sender)
+        psbt.validateSignaturesOfInput(0)
+    
+        psbt.finalizeAllInputs()
+      }
       const txHex = psbt.extractTransaction().toHex()
   
       console.log('Transaction hexadecimal:')
@@ -658,7 +740,12 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
 
       console.log(`p2tr output is ${myOta.output.toString('hex')}`)
       // const buf = Buffer.concat([Buffer.from([scriptTree.version]), scriptTree.output.length, scriptTree.output])
-      const leafHash = myOta.hash
+      const treeHash = myOta.hash
+      const redeem = scriptTree
+      const leafHash = bip341.tapleafHash(redeem)
+      console.log(`p2tr tree hash ${treeHash}`)
+      console.log(`p2tr leaf hash ${leafHash}`)
+
       console.log(`leaf hash is ${leafHash.toString('hex')}`)
 
       console.log(`witness[2] is ${myOta.witness[0].toString('hex')}`)
@@ -700,7 +787,14 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
       const buildLeafIndexFinalizer = (xOnlyMpcPk, myOta, key) =>{
         return (inputIndex, input, _tapLeafHashToFinalize) => {
           // const msgHash = psbt.getTaprootHashesForSig(inputIndex, _input, opt.gpk)
-          const msgHash = psbt.__CACHE.__TX.hashForWitnessV1(inputIndex, [input.witnessUtxo.script], [input.witnessUtxo.value], bitcoin.Transaction.SIGHASH_DEFAULT, myOta.hash)
+
+          const treeHash = myOta.hash
+          const redeem = scriptTree
+          const leafHash = bip341.tapleafHash(redeem)
+          console.log(`p2tr tree hash ${treeHash}`)
+          console.log(`p2tr leaf hash ${leafHash}`)
+
+          const msgHash = psbt.__CACHE.__TX.hashForWitnessV1(inputIndex, [input.witnessUtxo.script], [input.witnessUtxo.value], bitcoin.Transaction.SIGHASH_DEFAULT, leafHash)
           const sig = Buffer.from(key.signSchnorr(msgHash))
           const witness = [sig, xOnlyMpcPk, myOta.witness[0], myOta.witness[1]]
           
@@ -838,6 +932,10 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
       redeemVersion: 0xc0
     }
 
+    const a = Number('1').toString(16)
+    const b = Number('11').toString(16)
+    const c = Number('11').toString(16)
+
     // 2.2 生成控制块
     const hashx_p2tr = bitcoin.payments.p2tr({
       internalPubkey: xOnlyMpcPk,
@@ -861,7 +959,14 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
       tapLeafScript: [
         tapLeafScript
       ],
-      // tapInternalKey: xOnlyMpcPk,
+    });
+    hashx_psbt.addInput({
+      hash: unSpends.alice[1].txid,
+      index: unSpends.alice[1].vout,
+      witnessUtxo: { value: 1, script: hashx_p2tr.output },
+      tapLeafScript: [
+        tapLeafScript
+      ],
     });
 
     hashx_psbt.addOutput({
@@ -874,24 +979,25 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
       internalPubkey: xOnlyMpcPk
     })
 
+    let tx1 = hashx_psbt.extractTransaction(true);
     // test mpc
     const isMpc = true
     if (isMpc) {
-      const input = hashx_psbt.data.inputs[0]
-      // const sighashTypes = bitcoin.Transaction.SIGHASH_DEFAULT
-      const keyPair = ECPair.fromPublicKey(opt.sender.publicKey, { network })
-      const msgHash = hashx_psbt.checkTaprootHashesForSig(0, input, keyPair, undefined, bitcoin.Transaction.SIGHASH_DEFAULT)
-      console.log(`msgHash  ${msgHash[0].hash.toString('hex')}`)
-
-      const tapKeyHash = msgHash[0].hash
-      const sig = opt.sender.signSchnorr(tapKeyHash)
-
       const customFinalizer = (_inputIndex, input) => {
-        const witness = [
-          sig,
-          xOnlyMpcPk,
-        ].concat(tapLeafScript.script)
-        .concat(tapLeafScript.controlBlock)
+        const keypair = {
+          publicKey: xOnlyMpcPk,
+          signSchnorr: () => {}
+        }
+        const msgHash = hashx_psbt.checkTaprootHashesForSig(_inputIndex, input, keypair, undefined, bitcoin.Transaction.SIGHASH_DEFAULT)
+        console.log(`msgHash  ${msgHash[0].hash.toString('hex')}`)
+
+        const tapKeyHash = msgHash[0].hash
+        const sig = opt.sender.signSchnorr(tapKeyHash)
+          const witness = [
+            sig,
+            xOnlyMpcPk,
+          ].concat(tapLeafScript.script)
+          .concat(tapLeafScript.controlBlock)
 
         return {
           finalScriptWitness: psbtUtils.witnessStackToScriptWitness(witness)
@@ -899,8 +1005,9 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
       }
 
       hashx_psbt.finalizeInput(0, customFinalizer);
+      hashx_psbt.finalizeInput(1, customFinalizer);
     } else {
-      hashx_psbt.signInput(0, opt.sender);
+      hashx_psbt.signInput(_inputIndex, opt.sender);
       const customFinalizer = (_inputIndex, input) => {
         const scriptSolution = [
           input.tapScriptSig[0].signature,
@@ -916,6 +1023,7 @@ const sequence = bitcoin.Transaction.DEFAULT_SEQUENCE
       }
   
       hashx_psbt.finalizeInput(0, customFinalizer);
+      hashx_psbt.finalizeInput(1, customFinalizer);
     }
 
     let tx = hashx_psbt.extractTransaction();
@@ -1330,12 +1438,17 @@ async function spendByTransaction(opt) {
     // let embed = bitcoin.payments.embed({ data: [op_return_data] });
     // tx.addOutput(embed.output, 0);
 
-    const msgHash = tx.hashForWitnessV1(0, [fromOutScript, fromOutScript], [preAmount, 1], hashP2tr, p2tr.hash)
+    const treeHash = p2tr.hash
+    const leafHash = bip341.tapleafHash(redeem)
+    console.log(`p2tr tree hash ${treeHash}`)
+    console.log(`p2tr leaf hash ${leafHash}`)
+
+    const msgHash = tx.hashForWitnessV1(0, [fromOutScript, fromOutScript], [preAmount, 1], hashP2tr, leafHash)
     const sig = opt.sender.signSchnorr(msgHash)
     const wits = [sig, xOnlyMpcPk, redeemScript, tapLeafScript.controlBlock]
     tx.setWitness(0, wits)
 
-    const msgHash1 = tx.hashForWitnessV1(1, [fromOutScript, fromOutScript], [preAmount, 1], hashP2tr, p2tr.hash)
+    const msgHash1 = tx.hashForWitnessV1(1, [fromOutScript, fromOutScript], [preAmount, 1], hashP2tr, leafHash)
     const sig1 = opt.sender.signSchnorr(msgHash1)
     const wits1 = [sig1, xOnlyMpcPk, redeemScript, tapLeafScript.controlBlock]
     tx.setWitness(1, wits1)
@@ -1380,11 +1493,11 @@ const sendBtcByPsbt = async () => {
       value: utxo.value,
       sender: alice,
       receiver: {
-        address: "tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc",
+        address: "tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e",
       },
       amount: 1,
-      fee: 190,
-      txType: 'p2tr',
+      fee: 209,
+      txType: 'p2wpkh',
     }
   )
 }
@@ -1415,8 +1528,8 @@ const sendBtcByTransaction = async () => {
 setTimeout(async() => {
   await init()
   // await sendBtc()
-  // await sendBtcByPsbt()
-  await sendBtcByTransaction()
+  await sendBtcByPsbt()
+  // await sendBtcByTransaction()
 }, 0)
 
 process.on('uncaughtException', error => {

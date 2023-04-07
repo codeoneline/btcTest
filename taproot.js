@@ -72,6 +72,26 @@ function  getXBytes(pk){
   return "";
 }
 
+const toXOnly = pubKey => {
+  if (!(pubKey instanceof Buffer)) {
+    return null
+  }
+
+  if (pubKey.length === 32) {
+    return pubKey
+  }
+
+  if (pubKey.length === 33 || pubKey.length === 65) {
+    return pubKey.slice(1, 33)
+  }
+
+  if (pubKey.length === 64) {
+    return pubKey.slice(0, 32)
+  }
+
+  return null
+}
+
 const getAddressType = (address, network) => {
   if (address.length > 40) {
     const lock = bitcoin.address.fromBech32(address)
@@ -259,7 +279,33 @@ function tweakKey(pubKey, h) {
   };
 }
 
-function buildP2tr2(leafScript, internalPubkey) {
+function tweakHash(pubKey, h) {
+  return bitcoin.crypto.taggedHash('TapTweak', Buffer.concat(h ? [pubKey, h] : [pubKey]));
+}
+
+function tweakSigner(signer, opts) {
+  let privateKey= signer.privateKey
+  if (!privateKey) {
+    throw new Error('Private key is required for tweaking signer!');
+  }
+  if (signer.publicKey[0] === 3) {
+    privateKey = ecc.privateNegate(privateKey);
+  }
+
+  const tweakedPrivateKey = ecc.privateAdd(
+    privateKey,
+    tweakHash(toXOnly(signer.publicKey), opts.tweakHash),
+  );
+  if (!tweakedPrivateKey) {
+    throw new Error('Invalid tweaked private key!');
+  }
+
+  return ECPair.fromPrivateKey(Buffer.from(tweakedPrivateKey), {
+    network: opts.network,
+  });
+}
+
+function buildP2trManual(leafScript, internalPubkey) {
   const scriptTree = {
     output: leafScript,
     version: 0xc0
@@ -270,18 +316,17 @@ function buildP2tr2(leafScript, internalPubkey) {
     redeemVersion: 0xc0
   }
 
-  // const treeHash = toTreeHash(scriptTree)
+  const treeHash = toTreeHash(scriptTree)
   const leafHash = toLeafHash(redeem)
   // asset(treeHash.hash === leafHash)
 
   // path = leaf -> [ p1, ..., pn ]-> tree
   const path = []
   const outputKey = tweakKey(internalPubkey, treeHash.hash)
-  const controlBlock = Buffer.concat(
-    [Buffer.from([redeem.redeemVersion | outputKey.parity]), internalPubkey].concat(path)
-  )
-
+  const controlBlock = Buffer.concat([Buffer.from([redeem.redeemVersion | outputKey.parity]), internalPubkey].concat(path))
+  
   return {
+    script: leafScript,
     controlBlock,
     leafHash,
   }
@@ -311,6 +356,7 @@ function buildP2tr(leafScript, internalPubkey, network) {
   })
 
   return {
+    script: p2tr.witness[p2tr.witness.length - 2],
     controlBlock: p2tr.witness[p2tr.witness.length - 1],
     leafHash
   }
@@ -325,7 +371,7 @@ setTimeout(async () => {
   const leafScript = getOtaP2trRedeemScript(rndId, wanAddress, alice.publicKey)
   const xOnlyMpcPk = getXBytes(alice.publicKey.toString('hex'))
   const p = buildP2tr(leafScript, xOnlyMpcPk, network)
-  const p1 = buildP2tr2(leafScript, xOnlyMpcPk, network)
+  const p1 = buildP2trManual(leafScript, xOnlyMpcPk, network)
   console.log('dd')
 }, 0)
 
@@ -340,7 +386,7 @@ module.exports = {
     addressToLockHash,
     getAddressType,
     buildP2tr,
-    buildP2tr2,
+    buildP2trManual,
     hashToAddress,
     bitcoin,
 };

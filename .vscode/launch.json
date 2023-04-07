@@ -16,6 +16,15 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "await-test",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "program": "${workspaceFolder}/await-test.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "taproot",
       "skipFiles": [
         "<node_internals>/**"
