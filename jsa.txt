@@ -1,0 +1,64 @@
+// smg, sc
+syncMain(global.syncLogger)                                             
+  subSyncMain(chainType, logger)                                        
+    syncChain(chainType, logger)                                        
+      getScEvents(logger, chain, scAddr, topics, blkIndex, blkEnd)      
+        chain.getScEventSync(scAddr, topics, fromBlk, toBlk)                -> 未改完
+      splitEvent(chainType, events, logger)                             
+        crossAgent.getDecodeEventDbData(decodeEvent)                        -> 未改
+          decodeSpecialEvent(decodeEvent)                                           -> 已改
+          apiServerSync.queryAddrInfo(this.chainType, ota)
+
+
+
+
+
+chain.getScEventSync
+crossAgent.decodeSignatureData(mpcTx)
+crossAgent.getDecodeEventDbData(decodeEvent)
+
+
+// 事件处理
+handlerMain(global.monitorLogger)
+  monitorHandler(logger)                                   
+  canStoremanDebt(storemanConfig)                          
+  getStoremanDebtor(storemanConfig.groupId)                
+  doDebt(chainType, storemanConfig.groupId, nextGroupId)   
+    getInProcessDebtInfo(chainType, groupId, nextGroupId)  
+    agent.checkInProcessCross(groupId)                     
+      chain.getAsset(null, groupId)                        
+        getChainSmgAddress(storemanPk)                     
+    agent.createDebtData(chainType, groupId, nextGroupId)  
+      getCurrentSmgInfo(creditor)                          
+        getChainSmgAddress(this.storemanPk)                   -> 已改
+  syncUniMpcRequest(global.mpcLogger)                      
+    mpc.getMpcUniTransForApprove(23000)                    
+    crossAgent.decodeSignatureData(mpcTx)                     -> 未改完
+    crossAgent.recoverableApproveTx(content)               
+
+
+
+// ota
+apiServerSyncMain('BTC', global.syncLogger)
+  apiServerSync.syncAddrInfo                              
+  crossAgent.decodeApiBridgeTx(otaData)                       -> 已改
+  crossAgent.getDecodeEventDbData(decodeEvent)                -> 未改
+
+
+
+// account delete
+checkSmgAccountDelete(global.syncLogger)
+  _checkSmgAccountDeleteByChain(chainType)
+    agent.createAccountDeleteData(chainType, storemanConfig.groupId, nextGroupId)  ====  agent.createDebtData 很类似
+
+
+// 
+syncInterventionInfo(global.syncLogger)
+  apiServerSync.syncInterventionInfo(beginTime)
+    crossAgent.getDecodeEventDbData(decodeEvent)              -> 未改 参考ota， smg, sc
+
+
+
+//
+reDecodeEvent(global.syncLogger)
+  crossAgent.getDecodeEventDbData(unDecodeEvent)              -> 未改 参考ota， smg, sc

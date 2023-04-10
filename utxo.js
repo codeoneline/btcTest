@@ -1,4 +1,5 @@
 const spends = {
+  // compressed
   'alice': [
     {
       // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
@@ -420,6 +421,94 @@ const spends = {
       vout: 1,
       value: 1,
     },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: 'b9557a33838740456d34c709bc27d847e309333fee5ab5bd5b8a082af3bf5e63',
+      vout: 0,
+      value: 1264028,
+    },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: 'cd6759bb8d04fc8bacbca6b929d9b5eeb5cfa82189d857714361cff01cfb9398',
+      vout: 0,
+      value: 1199954,
+    },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: 'bf1d5c030a4a02bb33f68f24bc0ba8a1a46f2faf69b3afde637d55a32642c7a3',
+      vout: 0,
+      value: 1199145,
+    },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: '27f5c154645bbfe21b294643ae63542bb66abdfa3baa2c94e9b2938509c4e783',
+      vout: 0,
+      value: 1188936,
+    },
+  ],
+
+  // uncompressed
+  'aliceUncompressed': [
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '27f5c154645bbfe21b294643ae63542bb66abdfa3baa2c94e9b2938509c4e783',
+      vout: 1,
+      value: 10000,
+    },
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '906bc8f7cf1a9da8f9bca5d5b68e839de1eb4893ba72a27b5c164c7f266f3f95',
+      vout: 1,
+      value: 1,
+    },
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '10dfcd15316410ab1cf55dfcdb81013fe03c763b5e82e77cb218d6a244e8bf7f',
+      vout: 0,
+      value: 9563,
+    },
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '10dfcd15316410ab1cf55dfcdb81013fe03c763b5e82e77cb218d6a244e8bf7f',
+      vout: 1,
+      value: 1,
+    },
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '3f84fffa22e137f84313d40750910d9ba81e8a8a7e62cb7f78d82fb14ddd07cc',
+      vout: 0,
+      value: 9563,
+    },
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '3f84fffa22e137f84313d40750910d9ba81e8a8a7e62cb7f78d82fb14ddd07cc',
+      vout: 1,
+      value: 1,
+    },
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '8985dd0cbfcf0cad2d29e2f863d9e2adae602cd92ae643755304638597e3d387',
+      vout: 0,
+      value: 8689,
+    },
+    {
+      // p2sh 2MwL1gdG59nmYqiuR6i4YnqN8CHwKzuwqWP
+      txid: '7c44a5e761131a1892110bdeeaca548eb52c15bf6077d106e61026585f1899e1',
+      vout: 1,
+      value: 6000,
+    },
+    {
+      // p2pktr tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe
+      txid: '5f81f5a62fc780b79ec51be590b985a58efb8092c34bf6be65f39b2e69424d35',
+      vout: 1,
+      value: 2000,
+    },
+    {
+      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
+      txid: 'c9cba2426303a9daacc130a3f0c39e182eb21ba177b57e0b5775987cfb4f4c35',
+      vout: 0,
+      value: 1000,
+    },
   ],
 }
 
@@ -429,21 +518,60 @@ const unSpends = {
   // "p2pkh": "mx5ijhZuU9Eq49hnEryiGJUVBr9T7NBaTh",                                // 34
   // "p2sh": "2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD",                                // 35
   // "p2wpkh": "tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e",                       // 42
-  // "p2wsh": "tb1qansjcula52f0ee0fhkk4n2lzpf876r336vdxyfv70vtfsn7hfacq7q5may",    // 62
+  // "p2wsh": "tb1qlyrvh7ddcn6q20et7zh8avh29967d0se9np3q67sahh3fdt567rqmmh9w7",    // 62
+
+  // const wanAddress = '0x9da26fc2e1d6ad9fdd46138906b0104ae68a65d8'
+  // const rndId = '1234'
+
   // "p2pktr": "tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe",   // 62
-  // "p2shtr": "tb1pjgruzaxk65v7nhw628gyskj87sg926zvktq92gmnqw6h2sdwr7ysglr8ac",   // 62
+  // "p2shtr": "tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc",   // 62
   'alice': [
     // 51b4853607607b740c1783e45835bb53ed6b0ece0d072bef09b77c3f13f3dafa
     {
       // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txid: 'b9557a33838740456d34c709bc27d847e309333fee5ab5bd5b8a082af3bf5e63',
+      txid: '906bc8f7cf1a9da8f9bca5d5b68e839de1eb4893ba72a27b5c164c7f266f3f95',
       vout: 0,
-      value: 1264028,
+      value: 1188782,
     },
     {
       // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
       txid: 'b9557a33838740456d34c709bc27d847e309333fee5ab5bd5b8a082af3bf5e63',
       vout: 1,
+      value: 1,
+    },
+    {
+      // ota --- compressed
+      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
+      txid: '37290723d48517ea5373689f64f94da8f917a6e9b8eda56f6760bbdf22b0726f',
+      vout: 0,
+      value: 846,
+    },
+    {
+      // ota
+      // p2sh  2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
+      txid: '51b4853607607b740c1783e45835bb53ed6b0ece0d072bef09b77c3f13f3dafa',
+      vout: 0,
+      value: 18866,
+    },
+    {
+      // ota
+      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
+      txid: '30be355a7600284a2e7d105ffbd6046f57121faf9be05164e5a0b52490f1ff4a',
+      vout: 1,
+      value: 4422,
+    },
+    {
+      // ota
+      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
+      txid: '30be355a7600284a2e7d105ffbd6046f57121faf9be05164e5a0b52490f1ff4a',
+      vout: 0,
+      value: 1,
+    },
+    {
+      // ota
+      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
+      txid: 'f82d123f7399c806f5c8c11cf4d77cf4584f267aa285af9f64310032e2112fa4',
+      vout: 0,
       value: 1,
     },
     {
@@ -536,41 +664,6 @@ const unSpends = {
     {
       // ota
       // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
-      txid: '30be355a7600284a2e7d105ffbd6046f57121faf9be05164e5a0b52490f1ff4a',
-      vout: 1,
-      value: 4422,
-    },
-    {
-      // ota
-      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
-      txid: '30be355a7600284a2e7d105ffbd6046f57121faf9be05164e5a0b52490f1ff4a',
-      vout: 0,
-      value: 1,
-    },
-    {
-      // ota
-      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
-      txid: 'f82d123f7399c806f5c8c11cf4d77cf4584f267aa285af9f64310032e2112fa4',
-      vout: 0,
-      value: 1,
-    },
-    {
-      // ota
-      // p2sh  2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
-      txid: '51b4853607607b740c1783e45835bb53ed6b0ece0d072bef09b77c3f13f3dafa',
-      vout: 0,
-      value: 18866,
-    },
-    {
-      // ota --- compressed
-      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
-      txid: '37290723d48517ea5373689f64f94da8f917a6e9b8eda56f6760bbdf22b0726f',
-      vout: 0,
-      value: 846,
-    },
-    {
-      // ota
-      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
       
     },
     {
@@ -580,25 +673,73 @@ const unSpends = {
     },
   ],
 
-  // private key: 91nkjxTthS7RUsTRvqZSwZDXTf48rnKPJ2Yg1rpuaErDSKQffe9
+  // const alice = ECPair.fromPrivateKey(Buffer.from('1ae0ed26d71c7c5178347edc69f2336388b12e1f1a6d6306754fed8263c8a878', 'hex'), {network, compressed: false})
+  // private key: 1ae0ed26d71c7c5178347edc69f2336388b12e1f1a6d6306754fed8263c8a878
+  // compressed: false,
   // p2pkh = n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz, length = 34 
-  // p2sh = 2N6Q1fEPuWSTUxcFjgrRiUAhNfUv7m77Vt6, length = 35
+  // p2sh = 2MwL1gdG59nmYqiuR6i4YnqN8CHwKzuwqWP, length = 35
+
   // 非法 p2wpkh = tb1qmr2qyaldp8pyzpsgy88m5htus6cwxq74kchaf3, length = 42
-  // 非法 p2wsh = tb1qp0ltycltxlywuzhxkr8g3ywvew5tka8tjhjyzx276x04hw6vnftqqa3g89, length = 62
-  // p2phtr = tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe, length = 62
-  // p2shtr = tb1pwyuqpfzyzeft9cuznglndnj5az8td4uqssw9fmnug2jnjhkpl6psmc2sgg, length = 62
+  // 非法 p2wsh = tb1qzaspvlhk7gttvfmwyhfe9k4jxfhh7nqce7ln7a6tjp25s7fxvjnssr539z, length = 62
+
+  // p2pktr = tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe, length = 62
+  // p2shtr = tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr, length = 62
   'aliceUncompressed' : [
     {
-      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
+      txid: '4a33711745d3f534884370ce1c327c2dc1e631ffefdab374966dcca23eaee76d',
+      vout: 1,
+      value: 813,
     },
     {
-      // p2sh 2N6Q1fEPuWSTUxcFjgrRiUAhNfUv7m77Vt6
+      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
+      txid: '4a33711745d3f534884370ce1c327c2dc1e631ffefdab374966dcca23eaee76d',
+      vout: 0,
+      value: 1,
+    },
+    {
+      // p2pktr tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe
+      txid: 'c9cba2426303a9daacc130a3f0c39e182eb21ba177b57e0b5775987cfb4f4c35',
+      vout: 1,
+      value: 816,
+    },
+    {
+      // p2sh 2MwL1gdG59nmYqiuR6i4YnqN8CHwKzuwqWP
+      txid: '5f81f5a62fc780b79ec51be590b985a58efb8092c34bf6be65f39b2e69424d35',
+      vout: 0,
+      value: 3676,
+    },
+    {
+      // p2sh 2MwL1gdG59nmYqiuR6i4YnqN8CHwKzuwqWP
+      txid: '8985dd0cbfcf0cad2d29e2f863d9e2adae602cd92ae643755304638597e3d387',
+      vout: 1,
+      value: 1,
+    },
+    {
+      // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
+      txid: '7c44a5e761131a1892110bdeeaca548eb52c15bf6077d106e61026585f1899e1',
+      vout: 0,
+      value: 2253,
+    },
+    {
+      // RpcError: -26 non-mandatory-script-verify-flag (Using non-compressed keys in segwit)
+      // p2wpkh tb1qmr2qyaldp8pyzpsgy88m5htus6cwxq74kchaf3
+      txid: 'cd6759bb8d04fc8bacbca6b929d9b5eeb5cfa82189d857714361cff01cfb9398',
+      vout: 1,
+      value: 63865,
+    },
+    {
+      // TypeError: redeem.input or redeem.output contains uncompressed pubkey
+      // p2wsh tb1qzaspvlhk7gttvfmwyhfe9k4jxfhh7nqce7ln7a6tjp25s7fxvjnssr539z
+      txid: 'bf1d5c030a4a02bb33f68f24bc0ba8a1a46f2faf69b3afde637d55a32642c7a3',
+      vout: 1,
+      value: 600,
     },
     {
       // p2phtr tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe
     },
     {
-      // p2shtr tb1pwyuqpfzyzeft9cuznglndnj5az8td4uqssw9fmnug2jnjhkpl6psmc2sgg
+      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
     },
 
   ],

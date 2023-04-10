@@ -203,12 +203,13 @@ const addressExamples = {
   },
 }
 
-const testGetAddress = async () => {
+const testGetAddress = async (compressed = true) => {
   // const alice = ECPair.fromPrivateKey(Buffer.from('86812cf8897887c7d943d1ce592b8ada8f1869cdd29dc3cd84818cc4ddd988a2', 'hex'), network)
   // const alice = ECPair.fromWIF('cNUx4bohBTqM41hf2dLDVoCHSexqgj29Q9poCnvT3i8DtMnJATaa', network)
   // alice cNUx4bohBTqM41hf2dLDVoCHSexqgj29Q9poCnvT3i8DtMnJATaa
   // aliceUncompressed   91nkjxTthS7RUsTRvqZSwZDXTf48rnKPJ2Yg1rpuaErDSKQffe9
-  const alice = ECPair.fromWIF('91nkjxTthS7RUsTRvqZSwZDXTf48rnKPJ2Yg1rpuaErDSKQffe9', network)
+  const alice = ECPair.fromPrivateKey(Buffer.from('1ae0ed26d71c7c5178347edc69f2336388b12e1f1a6d6306754fed8263c8a878', 'hex'), {network, compressed})
+  // const alice = ECPair.fromWIF('91nkjxTthS7RUsTRvqZSwZDXTf48rnKPJ2Yg1rpuaErDSKQffe9', network)
   console.log(`public key isCompressed = ${alice.compressed}`)
   
   // const pk = bitcoin.payments.p2pk({pubkey: alice.publicKey, network})
@@ -333,7 +334,8 @@ setTimeout(async ()=> {
   // await testGetAddressLock()
   // await testAddressToLockHash()
   // addressToLockHash("tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp", network)
-  await testGetAddress()
+  await testGetAddress(true)
+  await testGetAddress(false)
 
 
   console.log('*** end')
