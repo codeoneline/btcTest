@@ -2,7 +2,6 @@ const bitcoin = require('bitcoinjs-lib');
 const Client = require('bitcoin-core')
 const ECPAIR = require('ecpair')
 const psbtUtils = require('bitcoinjs-lib/src/psbt/psbtutils')
-const bscript = require('bitcoinjs-lib/src/script')
 const bip341 = require('bitcoinjs-lib/src/payments/bip341')
 
 const crypto = require('crypto');
@@ -268,9 +267,10 @@ async function spendByPsbt(opt) {
       const partialSig = [
         {
           pubkey: keyPair.publicKey,
-          signature: bscript.signature.encode(signature, hashType),
+          signature: bitcoin.script.signature.encode(signature, hashType),
         },
       ]
+      const scriptSig = bitcoin.script.compile([signatureBuf, storemanPkBuf])
       psbt.data.updateInput(0, { partialSig })
 
       // const sigHash1 = psbt.__CACHE.__TX.hashForSignature(1, fromOutScript, hashType)
@@ -278,7 +278,7 @@ async function spendByPsbt(opt) {
       // const partialSig1 = [
       //   {
       //     pubkey: keyPair.publicKey,
-      //     signature: bscript.signature.encode(signature1, hashType),
+      //     signature: bitcoin.script.signature.encode(signature1, hashType),
       //   },
       // ]
       // psbt.data.updateInput(1, { partialSig: partialSig1 })
@@ -391,7 +391,7 @@ async function spendByPsbt(opt) {
         const partialSig = [
           {
             pubkey: keyPair.publicKey,
-            signature: bscript.signature.encode(signature, hashType),
+            signature: bitcoin.script.signature.encode(signature, hashType),
           },
         ]
         psbt.data.updateInput(0, { partialSig })
@@ -406,7 +406,7 @@ async function spendByPsbt(opt) {
         // const partialSig1 = [
         //   {
         //     pubkey: keyPair1.publicKey,
-        //     signature: bscript.signature.encode(signature1, hashType),
+        //     signature: bitcoin.script.signature.encode(signature1, hashType),
         //   },
         // ]
         // psbt.data.updateInput(1, { partialSig: partialSig1 })
@@ -533,6 +533,7 @@ async function spendByPsbt(opt) {
         const signature = opt.sender.sign(sigHash, hashType)
         const sig = bitcoin.script.signature.encode(signature, hashType)
 
+        const scriptSig = bitcoin.script.compile([signature, opt.sender.publicKey])
         const payment = bitcoin.payments.p2sh({
           redeem: {
             input: bitcoin.script.compile([sig, opt.sender.publicKey]), 
@@ -1212,10 +1213,10 @@ async function spendByTransaction(opt) {
     let inputIndex = 0
     let sigHash = tx.hashForSignature(inputIndex, fromOutScript, hashType);
     let signature = opt.sender.sign(sigHash)
-    let sig = bscript.signature.encode(signature, hashType)
+    let sig = bitcoin.script.signature.encode(signature, hashType)
     // let sigWithPubkey = bitcoin.payments.p2pkh( { pubkey: opt.sender.publicKey, signature: sig, network })
     // tx.setInputScript(inputIndex, sigWithPubkey.input)
-    let scriptSig = bscript.compile([sig, opt.sender.publicKey])
+    let scriptSig = bitcoin.script.compile([sig, opt.sender.publicKey])
     tx.setInputScript(inputIndex, scriptSig)
 
     inputIndex = 1
@@ -1224,7 +1225,7 @@ async function spendByTransaction(opt) {
     sig = bitcoin.script.signature.encode(signature, hashType)
     // sigWithPubkey = bitcoin.payments.p2pkh( { pubkey: opt.sender.publicKey, signature: sig, network })
     // tx.setInputScript(inputIndex, sigWithPubkey.input)
-    scriptSig = bscript.compile([sig, opt.sender.publicKey])
+    scriptSig = bitcoin.script.compile([sig, opt.sender.publicKey])
     tx.setInputScript(inputIndex, scriptSig)
     
     let txSerialized = tx.toHex();
@@ -1267,7 +1268,7 @@ async function spendByTransaction(opt) {
       network
     })
     // tx.setInputScript(inputIndex, sigWithPubkey.input)
-    let scriptSig = bscript.compile([].concat([ sig, opt.sender.publicKey ], redeemScript))
+    let scriptSig = bitcoin.script.compile([].concat([ sig, opt.sender.publicKey ], redeemScript))
     tx.setInputScript(inputIndex, scriptSig)
 
     inputIndex = 1
@@ -1283,7 +1284,7 @@ async function spendByTransaction(opt) {
     //   network
     // })
     // tx.setInputScript(inputIndex, sigWithPubkey.input)
-    scriptSig = bscript.compile([].concat([ sig, opt.sender.publicKey ], redeemScript))
+    scriptSig = bitcoin.script.compile([].concat([ sig, opt.sender.publicKey ], redeemScript))
     tx.setInputScript(inputIndex, scriptSig)
     
     let txSerialized = tx.toHex();
@@ -1307,7 +1308,7 @@ async function spendByTransaction(opt) {
     let signingScript = bitcoin.payments.p2pkh({ hash: fromOutScript.slice(2)}).output;
     let sigHash = tx.hashForWitnessV0(inputIndex, signingScript, preAmount, hashType);
     let signature = opt.sender.sign(sigHash)
-    let sig = bscript.signature.encode(signature, hashType)
+    let sig = bitcoin.script.signature.encode(signature, hashType)
     // const sigWithPubkey = bitcoin.payments.p2wpkh( { pubkey: opt.sender.publicKey, signature: sig })
     // tx.setWitness(0, sigWithPubkey.witness)
     let witness = [sig, opt.sender.publicKey]
@@ -1319,7 +1320,7 @@ async function spendByTransaction(opt) {
     // signingScript = bitcoin.payments.p2pkh({ hash: fromOutScript.slice(2)}).output;
     // sigHash = tx.hashForWitnessV0(inputIndex, signingScript, toUnit(utxo1.value), hashType);
     // signature = opt.sender.sign(sigHash)
-    // sig = bscript.signature.encode(signature, hashType)
+    // sig = bitcoin.script.signature.encode(signature, hashType)
     // // const sigWithPubkey = bitcoin.payments.p2wpkh( { pubkey: opt.sender.publicKey, signature: sig })
     // // tx.setWitness(0, sigWithPubkey.witness)
     // witness = [sig, opt.sender.publicKey]
@@ -1359,7 +1360,7 @@ async function spendByTransaction(opt) {
     //   network
     // })
     // tx.setWitness(inputIndex, sigWithPubkey.witness)
-    // let stack = bscript.toStack([ sig, opt.sender.publicKey ])
+    // let stack = bitcoin.script.toStack([ sig, opt.sender.publicKey ])
     // let witness = [].concat(stack, redeemScript)
     let witness = [sig, opt.sender.publicKey, redeemScript]
     tx.setWitness(inputIndex, witness)
@@ -1525,7 +1526,7 @@ const sendBtcByPsbt = async (compressed = true) => {
         },
         amount: 1,
         fee: 186,
-        txType: 'p2shtr',
+        txType: 'p2sh',
         bCompressed: false,
       }
     )

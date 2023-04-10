@@ -526,7 +526,13 @@ const unSpends = {
   // "p2pktr": "tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe",   // 62
   // "p2shtr": "tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc",   // 62
   'alice': [
-    // 51b4853607607b740c1783e45835bb53ed6b0ece0d072bef09b77c3f13f3dafa
+    {
+      // ota --- compressed
+      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
+      txid: '37290723d48517ea5373689f64f94da8f917a6e9b8eda56f6760bbdf22b0726f',
+      vout: 0,
+      value: 846,
+    },
     {
       // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
       txid: '906bc8f7cf1a9da8f9bca5d5b68e839de1eb4893ba72a27b5c164c7f266f3f95',
@@ -538,13 +544,6 @@ const unSpends = {
       txid: 'b9557a33838740456d34c709bc27d847e309333fee5ab5bd5b8a082af3bf5e63',
       vout: 1,
       value: 1,
-    },
-    {
-      // ota --- compressed
-      // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
-      txid: '37290723d48517ea5373689f64f94da8f917a6e9b8eda56f6760bbdf22b0726f',
-      vout: 0,
-      value: 846,
     },
     {
       // ota
