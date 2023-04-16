@@ -379,7 +379,7 @@ async function spendByPsbt(opt) {
         value: opt.amount,
       })
 
-      const isMpc = false
+      const isMpc = true
       if (isMpc) {
         let signingScript = bitcoin.payments.p2pkh({ hash: fromOutScript.slice(2)}).output;
         const sigHash = psbt.__CACHE.__TX.hashForWitnessV0(0, signingScript, preAmount, hashType)
@@ -1504,10 +1504,10 @@ const sendBtcByPsbt = async (compressed = true) => {
         value: utxo.value,
         sender: alice,
         receiver: {
-          address: "n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz",
+          address: "2NA9UEWU6wRkzp5cRXWsnukwrpQzhQBf2Rr",
         },
-        amount: 1,
-        fee: 153,
+        amount: 21000,
+        fee: 155,
         txType: 'p2wpkh',
         bCompressed: true,
       }
@@ -1522,11 +1522,11 @@ const sendBtcByPsbt = async (compressed = true) => {
         value: utxo.value,
         sender: alice,
         receiver: {
-          address: "tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr",
+          address: "2NA9UEWU6wRkzp5cRXWsnukwrpQzhQBf2Rr",
         },
-        amount: 1,
+        amount: 21000,
         fee: 186,
-        txType: 'p2sh',
+        txType: 'p2wpkh',
         bCompressed: false,
       }
     )
@@ -1579,13 +1579,147 @@ const sendBtcByTransaction = async (compressed = true) => {
   }
 }
 
+const txSendJson = {
+  txid: "24eea9b5009ecc5f0c65afcf9af3994aae98cdcbecec7366f66f6075288ce226",
+  hash: "7b5aab6d3ba1519736cebcca8bd2a7f5b991af4b2af67c48d79084b1c9abfff7",
+  version: 2,
+  size: 235,
+  vsize: 153,
+  weight: 610,
+  locktime: 0,
+  vin: [
+    {
+      txid: "74891ab927fd451ab1cb865306f22e6193d11bb1c96478bb8d8b71d1d816ad8c",
+      vout: 0,
+      scriptSig: {
+        asm: "",
+        hex: "",
+      },
+      txinwitness: [
+        "3045022100aa17812100f25da87269cbb00f6d2acbf44e6379201cc971531f9ee0d0d6243b022063ccda7876182ce587d750b45ca2af89adfd19452f1bad86a330d4fa078eca3b01",
+        "02713800a4441652b2e3829a3f36ce54e88eb6d780841c54ee7c42a5395ec1fe83",
+      ],
+      sequence: 4294967295,
+    },
+  ],
+  vout: [
+    {
+      value: 0.00514078,
+      n: 0,
+      scriptPubKey: {
+        asm: "0 b5b46bf9a9bfa00eeb5d789eacadab4ed16d11f9",
+        hex: "0014b5b46bf9a9bfa00eeb5d789eacadab4ed16d11f9",
+        address: "tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e",
+        type: "witness_v0_keyhash",
+      },
+    },
+    {
+      value: 0.0011,
+      n: 1,
+      scriptPubKey: {
+        asm: "1 32a991ce985e75ed24f94af5e2e315752ecb6d30da403f2aba5e28a19a44acc9",
+        hex: "512032a991ce985e75ed24f94af5e2e315752ecb6d30da403f2aba5e28a19a44acc9",
+        address: "tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp",
+        type: "witness_v1_taproot",
+      },
+    },
+  ],
+  hex: "020000000001018cad16d8d1718b8dbb7864c9b11bd193612ef2065386cbb11a45fd27b91a89740000000000ffffffff021ed8070000000000160014b5b46bf9a9bfa00eeb5d789eacadab4ed16d11f9b0ad01000000000022512032a991ce985e75ed24f94af5e2e315752ecb6d30da403f2aba5e28a19a44acc902483045022100aa17812100f25da87269cbb00f6d2acbf44e6379201cc971531f9ee0d0d6243b022063ccda7876182ce587d750b45ca2af89adfd19452f1bad86a330d4fa078eca3b012102713800a4441652b2e3829a3f36ce54e88eb6d780841c54ee7c42a5395ec1fe8300000000",
+  blockhash: "000000006e9c5e1d2f96c3e3a7914f19bff1390a924b3097e399184c2c6702fd",
+  confirmations: 5186,
+  time: 1678157650,
+  blocktime: 1678157650,
+}
+
+const txRedeemJson = {
+  txid: "b9b454acb72178193d3ade9d9a1797ed7332a0b21b677f4a57c1410083370997",
+  hash: "b5c4ac6cda08583f0fec4bbcc5a9a2ad88e14c0380bb1a96beb7cb48e4acf860",
+  version: 2,
+  size: 333,
+  vsize: 187,
+  weight: 747,
+  locktime: 0,
+  vin: [
+    {
+      txid: "24eea9b5009ecc5f0c65afcf9af3994aae98cdcbecec7366f66f6075288ce226",
+      vout: 1,
+      scriptSig: {
+        asm: "",
+        hex: "",
+      },
+      txinwitness: [
+        "b3bda097f0728efc2ec13b89371ed5db57b7903c1333d55fc5b311f3cd3acb3661f930543d63f85d7f1eb86e5ab51448f301c7756ac20960b67a60be34ddc6d4",
+        "fd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9",
+        "201082084cdcde1a6322d2a27061671d85e52b2bf3be03ab06f851db6175b156a27576a914bf2fc277fa47fab911bbc0234e578ab58a2ebaf488ac",
+        "c0fd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9",
+      ],
+      sequence: 4294967295,
+    },
+  ],
+  vout: [
+    {
+      value: 0.00101552,
+      n: 0,
+      scriptPubKey: {
+        asm: "1 2fbf8d0922230ae176e106acb25bebd87975f6a7f957a1b83df78c92e2fafbbe",
+        hex: "51202fbf8d0922230ae176e106acb25bebd87975f6a7f957a1b83df78c92e2fafbbe",
+        address: "tb1p97lc6zfzyv9wzahpq6ktykltmpuhta48l9t6rwpa77xf9ch6lwlqn628ap",
+        type: "witness_v1_taproot",
+      },
+    },
+    {
+      value: 0,
+      n: 1,
+      scriptPubKey: {
+        asm: "OP_RETURN 0332a991ce985e75ed24f94af5e2e315752ecb6d30da403f2aba5e28a19a44acc9",
+        hex: "6a210332a991ce985e75ed24f94af5e2e315752ecb6d30da403f2aba5e28a19a44acc9",
+        type: "nulldata",
+      },
+    },
+  ],
+  hex: "0200000000010126e28c2875606ff66673ececcbcd98ae4a99f39acfaf650c5fcc9e00b5a9ee240100000000ffffffff02b08c0100000000002251202fbf8d0922230ae176e106acb25bebd87975f6a7f957a1b83df78c92e2fafbbe0000000000000000236a210332a991ce985e75ed24f94af5e2e315752ecb6d30da403f2aba5e28a19a44acc90440b3bda097f0728efc2ec13b89371ed5db57b7903c1333d55fc5b311f3cd3acb3661f930543d63f85d7f1eb86e5ab51448f301c7756ac20960b67a60be34ddc6d420fd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f93b201082084cdcde1a6322d2a27061671d85e52b2bf3be03ab06f851db6175b156a27576a914bf2fc277fa47fab911bbc0234e578ab58a2ebaf488ac21c0fd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f900000000",
+  blockhash: "0000000000000003365e3c35b62722bd8b03a1814ebcbe0ffc04b2de83f306b9",
+  confirmations: 1108,
+  time: 1680583960,
+  blocktime: 1680583960,
+}
+
+// scriptPubKey.type === "scripthash"
+// scriptPubKey.type === "witness_v1_taproot"
+// scriptPubKey.type === "pubkeyhash"
+const testBtcData = async () => {
+  // const bHash = await client.getBlockHash(2423229)
+  // const block = await client.getBlockByHash(bHash, {
+  //   summary : false,
+  //   extension : 'json'
+  // })
+  // if (block && block.tx) {
+  //   let multiTx = block.tx.map((tx) => {
+  //     const vOut = tx.vout
+  //     const vIn = tx.vin
+  //     console.log(`**`)
+  //   })
+  // }
+
+  // const tx = await client.getRawTransaction('24eea9b5009ecc5f0c65afcf9af3994aae98cdcbecec7366f66f6075288ce226', true)
+  const tx = await client.getRawTransaction('b9b454acb72178193d3ade9d9a1797ed7332a0b21b677f4a57c1410083370997', true)
+  console.log('aa')
+
+  const block = await client.getBlockByHash(tx.blockhash, {
+    summary: false,
+    extension: 'json'
+  })
+  console.log('aa')
+}
+
 setTimeout(async() => {
   await init()
-  const bCompressed = true
   // await sendBtc()
   // await sendBtcByPsbt(true)
-  await sendBtcByPsbt(false)
+  // await sendBtcByPsbt(false)
   // await sendBtcByTransaction(false)
+
+  await testBtcData()
 }, 0)
 
 process.on('uncaughtException', error => {

@@ -27,7 +27,7 @@ const options = {
   }
 }
 
-const usedNetwork = "testnet"
+const usedNetwork = "bitcoin"
 const network = bitcoin.networks[usedNetwork]
 const btcConfig = options[usedNetwork]
 

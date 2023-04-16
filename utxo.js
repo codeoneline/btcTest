@@ -527,17 +527,17 @@ const unSpends = {
   // "p2shtr": "tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc",   // 62
   'alice': [
     {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: '906bc8f7cf1a9da8f9bca5d5b68e839de1eb4893ba72a27b5c164c7f266f3f95',
+      vout: 0,
+      value: 1188782,
+    },
+    {
       // ota --- compressed
       // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
       txid: '37290723d48517ea5373689f64f94da8f917a6e9b8eda56f6760bbdf22b0726f',
       vout: 0,
       value: 846,
-    },
-    {
-      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txid: '906bc8f7cf1a9da8f9bca5d5b68e839de1eb4893ba72a27b5c164c7f266f3f95',
-      vout: 0,
-      value: 1188782,
     },
     {
       // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e

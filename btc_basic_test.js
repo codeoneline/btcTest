@@ -261,6 +261,6 @@ setTimeout(async ()=> {
   // const info = await testGetAddressInfo(p2.pkh)
 
   // await testDescriptors()
-  await testGetSmgP2trAddress()
+  await testGetUxto()
   console.log('*** end')
 }, 0)

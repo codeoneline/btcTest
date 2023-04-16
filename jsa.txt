@@ -44,6 +44,76 @@ apiServerSyncMain('BTC', global.syncLogger)
   crossAgent.decodeApiBridgeTx(otaData)                       -> 已改
   crossAgent.getDecodeEventDbData(decodeEvent)                -> 未改
 
+// UserLockLogger         btc user -> smg
+// Type: 1, normal userLock; Data: tokenPairID + toAccount + fee
+    op_return: 01 + 000f + 40 (wan address -> userAccount) + fee(0 字节 或 8字节内)        hex => 46-54, 68 => 76
+                              op.event = this.crossInfo.EVENT.Lock.walletRapid[0];
+                              op.vout = tx.vout[j];
+                              op.args = {
+                                uniqueID: tx.txid,
+                                value: tx.vout[j].value,
+                                tokenPairID: tokenPairId,
+                                userAccount: '0x' + userAccount,
+                                tokenAccount: "0x0000000000000000000000000000000000000000",
+                                fee: networkFee
+                              };
+
+// SmgReleaseLogger       btc smg -> user
+// Type: 2, normal smg release; Data: tokenPairId + uniqueId
+    op_return: 02 + 000f + uniqueId()                            hex => 70
+                              op.event = this.crossInfo.EVENT.Release.smgRapid[0];
+                              op.vout = tx.vout[j];
+                              op.args = {
+                                uniqueID: '0x' + uniqueId,
+                                value: tx.vout[j].value,
+                                tokenPairID: tokenPairId,
+                                userAccount: tx.vout[j].scriptPubKey.addresses[0]         ---->  smgAddress
+                              };
+
+// smgOtaRedeemLogger    wanBridge user -> ota, ota -> smg
+// Type: 3, OTA smg redeem; Data: OTA address
+    op_return: 03 + otaHash (p2sh = 40, p2tr = 64)
+
+// smgProxyLogger    user上组， user -> pre smg， 
+// Type: 4, abnormal smg transfer for op_return_userLock; Data: uniqueId
+    op_return: 04 + uniqueId (64长度)
+                              op.event = 'smgProxyLogger';
+                              op.vout = tx.vout[j];
+                              op.args = {
+                                uniqueID: uniqueId,
+                                value: tx.vout[j].value
+                              };
+
+// smgProxyLogger    上组工作过期, user -> pre ota, 
+// Type: 5, abnomral smg transfer for OTA_userLock; Data: OTA address
+    op_return: 05 + otaHash (p2sh = 40, p2tr = 64)
+                              op.event = 'smgProxyLogger';
+                              op.isBridge = true;
+                              op.vout = tx.vout[j];
+                              op.args = {
+                                ota160: ota160,
+                                value: tx.vout[j].value
+                              };
+
+// TransferAssetLogger  上组 smg -> 下组 smg
+// Type: 6, smg debt transfer; Data: srcSmg
+    op_return: 06 + srcSmg (smgId 64)
+                              op.event = 'TransferAssetLogger';
+                              op.vout = tx.vout[j];
+                              op.destSmgAddr = tx.vout[j].scriptPubKey.addresses[0];
+                              op.args = {
+                                uniqueID: tx.txid,
+                                value: tx.vout[j].value,
+                                srcSmgID: srcSmg
+                              };
+
+// let op_return_cross_type = 1;
+// let op_return_smg_type = 2;
+// let op_return_smgOtaRedeem_type = 3;
+// let op_return_smgTransfer_type = 4;
+// let op_return_smgOtaTransfer_type = 5;
+// let op_return_smgDebt_type = 6;
+
 
 
 // account delete

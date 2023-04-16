@@ -36,16 +36,48 @@ let apiHome = "http://127.0.0.1:9004/api/"
 
 function addAddrInfo() {
   const url = apiHome + "btc/addAddrInfo"
-  const data = {
-    "oneTimeAddr": "tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp",
-    "randomId": "0x9096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b",
-    "chainType": "WAN",
-    "chainAddr": "0x34aABB238177eF195ed90FEa056Edd6648732014",
-    "smgPublicKey": "0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8",
-    "smgId": "0x000000000000000000000000000000000000000000000000006a73775f303033",
-    "tokenPairId": "15",
-    "networkFee": "0.0001",
-    "value": "110000"
+  // const data = {
+  //   "oneTimeAddr": "tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp",
+  //   "randomId": "0x9096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b",
+  //   "chainType": "WAN",
+  //   "chainAddr": "0x34aABB238177eF195ed90FEa056Edd6648732014",
+  //   "smgPublicKey": "0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8",
+  //   "smgId": "0x000000000000000000000000000000000000000000000000006a73775f303033",
+  //   "tokenPairId": "15",
+  //   "networkFee": "0.0001",
+  //   "value": "110000"
+  // }
+  // https://bridgeapi-testnet.wanchain.org:9004/api/btc/addAddrInfo
+  const mint = {
+    "oneTimeAddr":"2NA9UEWU6wRkzp5cRXWsnukwrpQzhQBf2Rr",
+    "randomId":"0x5840e27f62db1533292af237f9f48474b119e66866ef54f12dee895a2cf6607e",
+    "chainType":"WAN",
+    "chainAddr":"0x6aBdBe7d9fA6D658bF3435D10742F27EF9a53028",
+    "smgPublicKey":"0xc01cfea6d16eae031fa1a0e03a5113f2dd2134bf69c315846078a4972f901132808d0cbf0e41ea3afff04d9953ea8fc4fd926b6eb462fb7c3188527c899c6fba",
+    "smgId":"0x000000000000000000000000000000000000000000746573746e65745f303530",
+    "tokenPairId":"15",
+    "networkFee":"0.0001",
+    "value":"21000"
+  }
+
+  // https://bridgeapi-testnet.wanchain.org:9004/api/btc/addTxInfo
+  const burn = {
+    "chainType":"WAN",
+    "chainAddr":"0x6aBdBe7d9fA6D658bF3435D10742F27EF9a53028",
+    "chainHash":"0xaf9597bee0383f8838ca9d9ea464a3e41326ad8c29e4316ae8d2d45d4a1b79c9",
+    "btcAddr":"tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e"
+  }
+
+  // https://bridgeapi-testnet.wanchain.org:9004/api/btc/queryTxAckInfo/0xaf9597bee0383f8838ca9d9ea464a3e41326ad8c29e4316ae8d2d45d4a1b79c9
+  const burnGet = {
+    "success":true,
+    "data":{
+      "timestamp":1681177379165,
+      "btcAddr":"tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e",
+      "chainHash":"0xaf9597bee0383f8838ca9d9ea464a3e41326ad8c29e4316ae8d2d45d4a1b79c9",
+      "btcHash":"73ea5418a7f1f5fd3b4275ee9001545c739627ca14dc0b086db9823fa5a16e13",
+      "value":"10000"
+    }
   }
 
   // hashX: 1082084cdcde1a6322d2a27061671d85e52b2bf3be03ab06f851db6175b156a2

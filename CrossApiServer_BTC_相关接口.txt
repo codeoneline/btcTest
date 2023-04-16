@@ -1,0 +1,182 @@
+
+CrossApiServer :
+BTC相关接口
+
+1 ip:port/api/btc/addAddrInfo
+  wanBridge 添加OTA地址信息,创建 oneTimeAddr 索引,字段值不许重复
+  POST
+  {
+    oneTimeAddr:"",
+    randomId:"",
+    chainType:"",
+    chainAddr:"",
+    smgPublicKey:"",
+    smgId: "",
+    tokenPairId:"15",
+    wanBridgeNetworkfee:"",
+    value:"value"
+  }
+  数据库保存btcAddrInfo:
+  {
+	"_id" : ObjectId("6045c3749cf8e6738b449359"),
+	"createTime" : 1615184756009,
+	"confirmTime" : 1615184881663,
+	"status" : 1,
+	"oneTimeAddr" : "2N782Ru1dgBvR7ZHhJdcr9iiFEXhY5ub1Mw",
+	"randomId" : "0xdf86b6b96f7085a31d4075ad3b9ffe9acfe59eb562610fe1b61f82a831c2b79d",
+	"chainType" : "WAN",
+	"chainAddr" : "0x406b41140149f85e2d91d4daf7af8314c6c1437c",
+	"smgPublicKey" : "0x9b2280fb28cf3ea02e7abf59ea196096be2b78d9011a8571928c85229a3fdfb2fc082c66d2c97e7f91a3ed01f7dcb3ae9aab34edb50bbe2e86ca8e3aae446efb",
+	"smgId" : "0x000000000000000000000000000000000000000000000000006465765f303038",
+	"tokenPairId" : "15",
+	"networkFee" : "0.00047124",// apiServer本地获取的networkfee
+	"wanBridgeNetworkfee" : "0.00047124",// wanBridge传递的networkfee
+	"value" : "100000"
+  }
+  返回:{ success: false }
+       { success: true, apiServerNetworkFee: "0.00047124" }
+
+2 ip:port/api/btc/confirmAddrInfo/:oneTimeAddr
+  wanBridge确认OTA信息
+  POST
+  更新数据库btcAddrInfo:
+  {
+    ...
+    confirmTime: nowTime,
+    status: 1
+    ...
+  };
+  返回:{ success: true/false }
+
+utxo_ScanService:
+   扫链确认哪些OTA有交易，把交易hash+utxo信息保存到数据库 btcAddrInfoSync,
+     Agent调用syncAddrInfo查询只返回有交易的OTA信息
+     wanBridge根据OTA查询到对应txhash
+  保存数据 btcAddrInfoSync:
+  {
+    "_id" : ObjectId("6045c893e9bbe5754e8a7139"),
+	"oneTimeAddr" : "2N782Ru1dgBvR7ZHhJdcr9iiFEXhY5ub1Mw",
+	"value" : 0.001,
+	"btcHash" : "89eb2413979804a8a5d4b8556d9159f67bf0889332f4210e344c433405bfb705",
+	"height" : 1939440,
+	"smgPublicKey" : null,
+	"smgId" : null,
+	"vout" : 0,
+	"updateTime" : 1615186067835
+  }
+
+3 ip:port/api/btc/syncAddrInfo/:beginTime
+  agent同步OTA信息(有交易的OTA信息),btcAddrInfo和btcAddrInfoSync联合查询,查询大于beginTime的记录,
+  且有交易的一次性地址信息,如果跨链金额小于等于networkFee,不返回给agent
+  GET
+  返回:{success:false}
+       {success:true,data:[...],"count":"符合条件的记录总数",pageSize:一页的记录条数(配置文件参数),"timestamp":"本次最后一条记录的timestamp,无记录则为当前时间"}
+       {
+          "success": true,
+          "data": [
+                {
+                    "oneTimeAddr": "2MzDS2kK9Ej19oTxKjr7L9Yja8iuaZTcVmK",
+                    "randomId": "0x75dbcb5963d42af57705144fa8dafbf338abee75f6f5cd727461529ec39dfe41",
+                    "chainType": "WAN",
+                    "chainAddr": "0x406b41140149f85e2d91d4daf7af8314c6c1437c",
+                    "smgPublicKey": "0x279f12812f3e24c35caaca07b520fc0f7ea5535b257fde46729e9df0c26306021df736d1e7a0558b6a077a3d5bf3f20f1105df680edf3ac530e2bb5e176bca32",
+                    "smgId": "0x000000000000000000000000000000000000000000000000006465765f303036",
+                    "tokenPairId": "15",
+                    "networkFee": "0.00047124",
+                    "sendValue": "100000",
+                    "btcHash": "btchash",
+                    "updateTime": 1613805205914,
+                    "height":1939026
+                }
+            ],
+            "count": 1,
+            "timestamp": 1613805205914
+       }
+
+4 ip:port/api/btc/syncAddrInfoExplorer/:beginTime
+  供wanchain explorer查询调用，参数及返回值与接口:ip:port/api/btc/syncAddrInfo/:beginTime相同,
+  唯一区别是不会过滤掉跨链金额小于等于networkfee的记录
+
+5 ip:port/api/btc/queryActionInfo/:oneTimeAddr
+  wanBridge根据OTA查询跨链信息:BTC->WAN/ETH,查询btcHash
+  GET
+  返回:{ success: false }
+       { "success":true,
+         "data":{
+             "oneTimeAddr":"2MzDS2kK9Ej19oTxKjr7L9Yja8iuaZTcVmK",
+             "btcHash":"btchash"
+         }
+       }
+
+5 ip:port/api/btc/queryAddrInfo/:oneTimeAddr
+  agent查询单条OTA信息
+  GET
+  返回:{ success: false }
+       {
+         "success":true,
+         "data":{
+            "oneTimeAddr":"2MzDS2kK9Ej19oTxKjr7L9Yja8iuaZTcVmK",
+            "randomId":"0x75dbcb5963d42af57705144fa8dafbf338abee75f6f5cd727461529ec39dfe41",
+            "chainType":"WAN",
+            "chainAddr":"0x406b41140149f85e2d91d4daf7af8314c6c1437c",
+            "smgPublicKey":"0x279f12812f3e24c35caaca07b520fc0f7ea5535b257fde46729e9df0c26306021df736d1e7a0558b6a077a3d5bf3f20f1105df680edf3ac530e2bb5e176bca32",
+            "smgId":"0x000000000000000000000000000000000000000000000000006465765f303036",
+            "tokenPairId":"15",
+            "networkFee":"0",
+            "sendValue": "100000",
+            "btcHash": "btchash",
+            "updateTime": 1613805205914
+         }
+       }
+
+
+6 ip:/port/api/btc/addTxInfo
+  WAN/ETH跨向BTC,wanBridge提交txHash等信息
+  POST
+  {
+	"btcAddr" : "ms7o3axvg33pbeqxNpvZJgxpwrcHnzeANw",
+	"chainType" : "WAN",
+	"chainAddr" : "0x406b41140149f85e2d91d4daf7af8314c6c1437c",
+	"chainHash" : "0x0c89f15ce5a89ac0eabe92ea8fd2ec4930a926d08fa4823c75e9e8c32354e7d1"
+  }
+  存储btcTxInfo:
+  {
+	"timestamp" : 1614950031962,
+    "btcAddr" : "ms7o3axvg33pbeqxNpvZJgxpwrcHnzeANw",
+	"chainType" : "WAN",
+	"chainAddr" : "0x406b41140149f85e2d91d4daf7af8314c6c1437c",
+	"chainHash" : "0x0c89f15ce5a89ac0eabe92ea8fd2ec4930a926d08fa4823c75e9e8c32354e7d1"    
+  }
+  返回：{ success: true/false }
+
+7 ip:port/api/btc/addTxAckInfo
+  agent跨链处理交易完成后,向apiServer提交交易处理信息,apiServer根据chainHash在btc
+  POST
+  [
+    {
+      btcAddr:"btc address"
+      chainHash: "最初WAN/ETH发送跨链时的hash",
+      btcHash: "btc上hash",
+    }
+    .....
+  ]
+  存储btcTxAckInfo:
+  {
+    timestamp: nowTime,
+    btcAddr:"btc address"
+    chainHash: "最初WAN/ETH发送跨链时的hash",
+    btcHash: "btc上hash"
+  }
+  返回：{ success: true/false }
+
+8 ip:port/api/btc/queryTxAckInfo/:chainHash
+  wanBridge查询交易信息
+  GET
+  返回：{ success:true,data:{}}
+  data:
+  {
+    timestamp: nowTime,
+    btcAddr:"btc address"
+    chainHash: "最初WAN/ETH发送跨链时的hash",
+    btcHash: "btc上hash",
+  }
