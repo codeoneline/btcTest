@@ -27,7 +27,7 @@ const options = {
   }
 }
 
-const usedNetwork = "bitcoin"
+const usedNetwork = "testnet"
 const network = bitcoin.networks[usedNetwork]
 const btcConfig = options[usedNetwork]
 
@@ -40,23 +40,16 @@ function toUnit(amount, decimals = 8) {
   return Math.floor(amount * unit)
 }
 
+function hexAdd0x(hexs) {
+  if (0 != hexs.indexOf('0x')) {
+    return '0x' + hexs;
+  }
+  return hexs;
+}
+
 function getHash(id, user) {
-  console.log("getHash id = %s",id)
-  console.log("getHash user = %s", user)
-  if (!id.startsWith('0x')) {
-      id = '0x' + id;
-  }
-  if (!user.startsWith('0x')) {
-      user = '0x' + user;
-  }
-  const hash = crypto.createHash('sha256');
-  hash.update(id + user);
-  let ret = hash.digest('hex');
-  console.log('getHash id = %s user=%s hash(id,user)', id, user, ret);
-  if (ret.startsWith('0x')) {
-      ret = ret.slice(2);
-  }
-  return ret;
+  const hash = bitcoin.crypto.sha256(hexAdd0x(id) + user)
+  return hexTrip0x(hash.toString('hex'))
 }
 
 const toXOnly = pubKey => {
@@ -160,6 +153,21 @@ function getOtaP2trRedeemScript(randomId, userAccount, MPC_PK) {
   )
 }
 
+function getSmgP2trRedeemScript(MPC_PK) {
+  let pkBuffer = MPC_PK instanceof Buffer ? MPC_PK : Buffer.from(MPC_PK, 'hex') 
+  let xOnlyMpcPk = toXOnly(pkBuffer)
+  return bitcoin.script.fromASM(
+    `
+  OP_DUP
+  OP_HASH160
+  ${bitcoin.crypto.hash160(Buffer.from(xOnlyMpcPk, 'hex')).toString('hex')}
+  OP_EQUALVERIFY
+  OP_CHECKSIG
+  `.trim()
+      .replace(/\s+/g, ' '),
+  )
+}
+
 process.on('uncaughtException', error => {
   console.log(`uncaughtException ${error}`)
 });
@@ -241,6 +249,65 @@ const testGetAddress = async (compressed = true) => {
   // console.log(`p2ms = ${ms.address}, length = ${ms.address.length}`)
 
   return {pkh, sh, wpkh, wsh, tr}
+}
+
+// gpk is 0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8
+// p2pkh = mspuGjMvg9vPUzNsjoNPELSh1v5brbXfHN, length = 34 
+// p2sh = 2N2hnoLkLdYstobyHZBhLabDC421cxVH5qn, length = 35
+// p2wpkh = tb1qsur8jvgdchxyf09vlve0ugyfafj5wuhyhj84tj, length = 42
+// p2wsh = tb1qyjdfht403dw5rrfj5fp34jj0eussngjrvf94uxu87nrqqq8swqfqw769hh, length = 62
+// p2tr key path spend = tb1pj5kjhsr7xs06mw5g6fkc43yx27efnteyr53np04kwsprna09gkxqu2jxa3, length = 62
+// p2tr ota script path spend = tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp, length = 62
+// p2tr smg script path spend = tb1p97lc6zfzyv9wzahpq6ktykltmpuhta48l9t6rwpa77xf9ch6lwlqn628ap, length = 62
+const wanAddress = '0x34aABB238177eF195ed90FEa056Edd6648732014'
+const rndId = '0x9096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
+const testGetGpkAddress = async () => {
+  // const aliceKeyPair = ECPair.fromPrivateKey(Buffer.from('1ae0ed26d71c7c5178347edc69f2336388b12e1f1a6d6306754fed8263c8a878', 'hex'), {network, compressed: false})
+  // const publicKey = aliceKeyPair.publicKey.toString('hex')
+  const gpk = "0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8"
+  const publicKey = "04" + hexTrip0x(gpk)
+
+  const alice = ECPair.fromPublicKey(Buffer.from(publicKey, 'hex'), {network, compressed: false})
+  console.log(`gpk is ${gpk}`)
+
+  // p2pkh
+  const pkh = bitcoin.payments.p2pkh({pubkey: alice.publicKey, network})
+  console.log(`p2pkh = ${pkh.address}, length = ${pkh.address.length} `)
+
+  // p2sh
+  const redeemScript = getOtaP2shRedeemScript(rndId, wanAddress, alice.publicKey)
+  const sh = bitcoin.payments.p2sh({ redeem: { output: redeemScript, network }, network})
+  console.log(`p2sh = ${sh.address}, length = ${sh.address.length}`)
+
+  // p2wpkh 不支持非压缩公钥
+  const wpkh = bitcoin.payments.p2wpkh({pubkey: alice.publicKey, network})
+  console.log(`p2wpkh = ${wpkh.address}, length = ${wpkh.address.length}`)
+  // p2wsh 不支持非压缩公钥
+  const wsh = bitcoin.payments.p2wsh({redeem: { output: redeemScript, network }, network})
+  console.log(`p2wsh = ${wsh.address}, length = ${wsh.address.length}`)
+
+  // p2pktr
+  const xOnlyMpcPk = alice.publicKey.slice(1, 33)
+  const tr = bitcoin.payments.p2tr({ internalPubkey: xOnlyMpcPk, network})
+  console.log(`p2tr key path spend = ${tr.address}, length = ${tr.address.length}`)
+
+  // p2shtr --- ota
+  const otaRedeemScript = getOtaP2trRedeemScript(rndId, wanAddress, alice.publicKey)
+  const otaScriptTree = {
+    output: otaRedeemScript,
+  }
+  const ota = bitcoin.payments.p2tr({ internalPubkey: xOnlyMpcPk, scriptTree: otaScriptTree, network})
+  console.log(`p2tr ota script path spend = ${ota.address}, length = ${ota.address.length}`)
+
+  // p2shtr --- smg
+  const smgRedeemScript = getSmgP2trRedeemScript(alice.publicKey)
+  const smgScriptTree = {
+    output: smgRedeemScript,
+  }
+  const smg = bitcoin.payments.p2tr({ internalPubkey: xOnlyMpcPk, scriptTree: smgScriptTree, network})
+  console.log(`p2tr smg script path spend = ${smg.address}, length = ${smg.address.length}`)
+
+  return {pkh, sh, wpkh, wsh, tr, ota, smg}
 }
 
 const getAddressType = (address, network) => {
@@ -334,9 +401,10 @@ setTimeout(async ()=> {
   // await testGetAddressLock()
   // await testAddressToLockHash()
   // addressToLockHash("tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp", network)
-  await testGetAddress(true)
-  await testGetAddress(false)
+  // await testGetAddress(true)
+  // await testGetAddress(false)
 
+  await testGetGpkAddress()
 
   console.log('*** end')
 }, 0)

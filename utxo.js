@@ -678,11 +678,12 @@ const unSpends = {
   // p2pkh = n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz, length = 34 
   // p2sh = 2MwL1gdG59nmYqiuR6i4YnqN8CHwKzuwqWP, length = 35
 
-  // 非法 p2wpkh = tb1qmr2qyaldp8pyzpsgy88m5htus6cwxq74kchaf3, length = 42
-  // 非法 p2wsh = tb1qzaspvlhk7gttvfmwyhfe9k4jxfhh7nqce7ln7a6tjp25s7fxvjnssr539z, length = 62
+  // p2wpkh 非法 = tb1qmr2qyaldp8pyzpsgy88m5htus6cwxq74kchaf3, length = 42
+  // p2wsh 非法 = tb1qzaspvlhk7gttvfmwyhfe9k4jxfhh7nqce7ln7a6tjp25s7fxvjnssr539z, length = 62
 
   // p2pktr = tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe, length = 62
-  // p2shtr = tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr, length = 62
+  // p2shtr ota = tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr, length = 62
+  // p2shtr smg = tb1pmu3ssldw7d9tcham5pdt99wzy2fsu5wxn2rf46nlzp8qe5dhuq8q9lu5k7, length = 62
   'aliceUncompressed' : [
     {
       // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr

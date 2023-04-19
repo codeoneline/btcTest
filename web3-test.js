@@ -72,7 +72,8 @@ const getGpkDetail = async (groupId) => {
   const wanChainConfig = configs.wanchain.testnet
   const wanDeployConfig = require(`./abi/${wanChainConfig.deployedFile}`)
   const web3 = createWeb3(wanChainConfig.rpc)
-  const address = wanDeployConfig.GpkProxyV2.address.toLowerCase()
+  // const address = wanDeployConfig.GpkProxyV2.address.toLowerCase()
+  const address = '0xf0bFfF373EEF7b787f5aecb808A59dF714e2a6E7'
   const abiFileName = wanDeployConfig.GpkProxyV2.abi
   const abi = require(`./abi/${abiFileName}`)
   const contract = new web3.eth.Contract(abi, address)
