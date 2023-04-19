@@ -59,6 +59,42 @@ function addAddrInfo() {
     "networkFee":"0.0001",
     "value":"21000"
   }
+  const ObjectId = (i) => {
+    return i
+  }
+
+  // btc/addAddrInfo
+  const btcAddrInfo = {
+    "_id" : ObjectId("640699dc8cfda221da4fdc43"), 
+    "createTime" : 1678154199490, 
+    "confirmTime" : 0, 
+    "status" : 0, 
+    "wanBridgeNetworkfee" : "0.0001", 
+
+    "oneTimeAddr" : "tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp", 
+    "randomId" : "0x9096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b", 
+    "chainType" : "WAN", 
+    "chainAddr" : "0x34aABB238177eF195ed90FEa056Edd6648732014", 
+    "smgPublicKey" : "0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8", 
+    "smgId" : "0x000000000000000000000000000000000000000000000000006a73775f303033", 
+    "tokenPairId" : "15", 
+    "networkFee" : "0.0001", 
+    "value" : "110000"
+  }
+
+  // sync
+  const btcAddrInfoSync = {
+    "_id" : ObjectId("6406f5cad731532de6fa3da8"),
+    "oneTimeAddr" : "tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp", 
+    "value" : 0.0011, 
+    "btcHash" : "24eea9b5009ecc5f0c65afcf9af3994aae98cdcbecec7366f66f6075288ce226", 
+    "height" : 2423229, 
+    "smgPublicKey" : null, 
+    "smgId" : null, 
+    "vout" : 1, 
+    "updateTime" : 1678177738211 
+  }
+
 
   // https://bridgeapi-testnet.wanchain.org:9004/api/btc/addTxInfo
   const burn = {
