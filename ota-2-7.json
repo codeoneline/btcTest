@@ -114,6 +114,12 @@
 			"networkFee": "10000"
 		}
 	}],
+	"storemanLockTxHash": [
+		"wanchain: smg -> 合约的地址"
+	],
+	"storemanLockEvent": {
+
+	},
 	"failAction": "lock",
 	"failReason": "lock createTrans: has in approved db"
 }

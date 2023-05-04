@@ -3,6 +3,18 @@ const spends = {
   'alice': [
     {
       // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: 'fcabf0c6184bf2ff1333a0bdefeb28a62d67bc723d5f07936347f4b4181ecceb',
+      vout: 0,
+      value: 1167627,
+    },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: '906bc8f7cf1a9da8f9bca5d5b68e839de1eb4893ba72a27b5c164c7f266f3f95',
+      vout: 0,
+      value: 1188782,
+    },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
       txid: 'd13405c724f5882f00566145e4547304cc5ed8d3e268a0ab869ccb1b3fa54b7c',
       vout: 0,
       value: 1284912,
@@ -445,6 +457,24 @@ const spends = {
       vout: 0,
       value: 1188936,
     },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: 'b9557a33838740456d34c709bc27d847e309333fee5ab5bd5b8a082af3bf5e63',
+      vout: 1,
+      value: 1,
+    },
+    {
+      // p2wpkh tb1p7y6wzygq03c6nu3dnmpgwr8x5pqm9shkgxxwjuk25yvdl9wxepkst44lav
+      txid: '43f4cc30dc473a64e2336fe56cabff12b9e84f893c96f6e47b05d78f7983a18e',
+      vout: 1,
+      value: 120000,
+    },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: '43f4cc30dc473a64e2336fe56cabff12b9e84f893c96f6e47b05d78f7983a18e',
+      vout: 0,
+      value: 1047472,
+    },
   ],
 
   // uncompressed
@@ -527,12 +557,6 @@ const unSpends = {
   // "p2shtr": "tb1p76h0uyjxvca9g4qmnvs6zv29lucjfnpqr0crg2uvwtjnfsklleqsf0rjcc",   // 62
   'alice': [
     {
-      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txid: '906bc8f7cf1a9da8f9bca5d5b68e839de1eb4893ba72a27b5c164c7f266f3f95',
-      vout: 0,
-      value: 1188782,
-    },
-    {
       // ota --- compressed
       // p2sh 2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
       txid: '37290723d48517ea5373689f64f94da8f917a6e9b8eda56f6760bbdf22b0726f',
@@ -540,17 +564,23 @@ const unSpends = {
       value: 846,
     },
     {
-      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
-      txid: 'b9557a33838740456d34c709bc27d847e309333fee5ab5bd5b8a082af3bf5e63',
-      vout: 1,
-      value: 1,
-    },
-    {
       // ota
       // p2sh  2N1WMNXs5YLZGbyPUt6wGjx3zTgfZxG8HSD
       txid: '51b4853607607b740c1783e45835bb53ed6b0ece0d072bef09b77c3f13f3dafa',
       vout: 0,
       value: 18866,
+    },
+    {
+      // p2wpkh tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e
+      txid: '4e96f4f04c082c892d1e8a5d1f07868de8830105d6c218a607350c3c268369c3',
+      vout: 0,
+      value: 917317,
+    },
+    {
+      // p2sh gpk ota 2N8spV8DBdAMTKpdVKCSeayMvZUZPQoqaQB
+      txid: '4e96f4f04c082c892d1e8a5d1f07868de8830105d6c218a607350c3c268369c3',
+      vout: 1,
+      value: 130000,
     },
     {
       // ota
@@ -686,24 +716,6 @@ const unSpends = {
   // p2shtr smg = tb1pmu3ssldw7d9tcham5pdt99wzy2fsu5wxn2rf46nlzp8qe5dhuq8q9lu5k7, length = 62
   'aliceUncompressed' : [
     {
-      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
-      txid: '4a33711745d3f534884370ce1c327c2dc1e631ffefdab374966dcca23eaee76d',
-      vout: 1,
-      value: 813,
-    },
-    {
-      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
-      txid: '4a33711745d3f534884370ce1c327c2dc1e631ffefdab374966dcca23eaee76d',
-      vout: 0,
-      value: 1,
-    },
-    {
-      // p2pktr tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe
-      txid: 'c9cba2426303a9daacc130a3f0c39e182eb21ba177b57e0b5775987cfb4f4c35',
-      vout: 1,
-      value: 816,
-    },
-    {
       // p2sh 2MwL1gdG59nmYqiuR6i4YnqN8CHwKzuwqWP
       txid: '5f81f5a62fc780b79ec51be590b985a58efb8092c34bf6be65f39b2e69424d35',
       vout: 0,
@@ -716,10 +728,34 @@ const unSpends = {
       value: 1,
     },
     {
+      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
+      txid: '4a33711745d3f534884370ce1c327c2dc1e631ffefdab374966dcca23eaee76d',
+      vout: 1,
+      value: 813,
+    },
+    {
       // p2pkh n1HSEBFgJvBCndkigyAvwaVQdguoe1y9Qz
       txid: '7c44a5e761131a1892110bdeeaca548eb52c15bf6077d106e61026585f1899e1',
       vout: 0,
       value: 2253,
+    },
+    {
+      // p2pktr tb1pd07zgv8jchdr0h76032yux02znsscawt0yakwnw7yykewt3c6ynsekjyqe
+      txid: 'c9cba2426303a9daacc130a3f0c39e182eb21ba177b57e0b5775987cfb4f4c35',
+      vout: 1,
+      value: 816,
+    },
+    {
+      // p2sh 2MwL1gdG59nmYqiuR6i4YnqN8CHwKzuwqWP
+      txid: '8985dd0cbfcf0cad2d29e2f863d9e2adae602cd92ae643755304638597e3d387',
+      vout: 1,
+      value: 1,
+    },
+    {
+      // p2shtr tb1pw0q39mlpf42xr68rd90whsf7l78l7kulxl4cq7nhk4s7dw9lj6mqmy36mr
+      txid: '4a33711745d3f534884370ce1c327c2dc1e631ffefdab374966dcca23eaee76d',
+      vout: 0,
+      value: 1,
     },
     {
       // RpcError: -26 non-mandatory-script-verify-flag (Using non-compressed keys in segwit)
@@ -751,6 +787,26 @@ const unSpends = {
       vout: 1,
       value: 300000,
     },
+  ],
+  'gpkP2pkh': [
+    // gpkP2pkh is 0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57
+    // p2pkh = mvqKUF6jQhv6JszEJ4QkTtS4h7tgpjVQ89, length = 34 
+    // p2sh = 2N5S69EuiUdaAXtWHYShdBxmq99D1VseC83, length = 35
+    // p2wpkh = tb1q4qpseah2ugamrdp22f65v9mw7snt8s40ls03kw, length = 42
+    // p2wsh = tb1ql9tq76t3qh6jgl6vcyu6hpg3ggsurqtwzlc9egxd7wmhavwvf33qh4228j, length = 62
+    // p2tr key path spend = tb1pgnk9m6uukv3j3nukrvk3p0dsqz9z8ffwpvhdp0sp6qjxq84elgrs4f9fps, length = 62
+    // p2tr ota script path spend = tb1p2f2ptznqwe09zfc5dsjd7pv8vfu4n6ycsp2ertv0vryflsc2n9xszerukm, length = 62
+    // p2tr smg script path spend = tb1p9cf28nykmsgk6tfj8rm8x8525x248uy2rrjk63qdemjh34euvtmsryqzx6, length = 62
+  ],
+  "gpkP2tr": [
+    // gpkP2tr is 0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8
+    // p2pkh = mspuGjMvg9vPUzNsjoNPELSh1v5brbXfHN, length = 34 
+    // p2sh = 2N2hnoLkLdYstobyHZBhLabDC421cxVH5qn, length = 35
+    // p2wpkh = tb1qsur8jvgdchxyf09vlve0ugyfafj5wuhyhj84tj, length = 42
+    // p2wsh = tb1qyjdfht403dw5rrfj5fp34jj0eussngjrvf94uxu87nrqqq8swqfqw769hh, length = 62
+    // p2tr key path spend = tb1pj5kjhsr7xs06mw5g6fkc43yx27efnteyr53np04kwsprna09gkxqu2jxa3, length = 62
+    // p2tr ota script path spend = tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp, length = 62
+    // p2tr smg script path spend = tb1p97lc6zfzyv9wzahpq6ktykltmpuhta48l9t6rwpa77xf9ch6lwlqn628ap, length = 62
   ],
 }
 

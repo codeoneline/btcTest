@@ -251,24 +251,32 @@ const testGetAddress = async (compressed = true) => {
   return {pkh, sh, wpkh, wsh, tr}
 }
 
-// gpk is 0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8
-// p2pkh = mspuGjMvg9vPUzNsjoNPELSh1v5brbXfHN, length = 34 
-// p2sh = 2N2hnoLkLdYstobyHZBhLabDC421cxVH5qn, length = 35
-// p2wpkh = tb1qsur8jvgdchxyf09vlve0ugyfafj5wuhyhj84tj, length = 42
-// p2wsh = tb1qyjdfht403dw5rrfj5fp34jj0eussngjrvf94uxu87nrqqq8swqfqw769hh, length = 62
-// p2tr key path spend = tb1pj5kjhsr7xs06mw5g6fkc43yx27efnteyr53np04kwsprna09gkxqu2jxa3, length = 62
-// p2tr ota script path spend = tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp, length = 62
+// const wanAddress = '0x34aABB238177eF195ed90FEa056Edd6648732014'
+// const rndId = '0x9096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
+// const gpkP2tr = '0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8'
 // p2tr smg script path spend = tb1p97lc6zfzyv9wzahpq6ktykltmpuhta48l9t6rwpa77xf9ch6lwlqn628ap, length = 62
+// p2tr ota script path spend = tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp, length = 62
+
 const wanAddress = '0x34aABB238177eF195ed90FEa056Edd6648732014'
-const rndId = '0x9096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
+const rndId = '0x2096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
+const gpkP2pkh = '0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57'
+// p2pkh = mvqKUF6jQhv6JszEJ4QkTtS4h7tgpjVQ89, length = 34 
+// p2sh = 2N8spV8DBdAMTKpdVKCSeayMvZUZPQoqaQB, length = 35
+
 const testGetGpkAddress = async () => {
   // const aliceKeyPair = ECPair.fromPrivateKey(Buffer.from('1ae0ed26d71c7c5178347edc69f2336388b12e1f1a6d6306754fed8263c8a878', 'hex'), {network, compressed: false})
   // const publicKey = aliceKeyPair.publicKey.toString('hex')
-  const gpk = "0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8"
-  const publicKey = "04" + hexTrip0x(gpk)
+
+  // const gpkP2tr = "0xfd89faab31299366fb6ade51dccb84624ef76b4018b1e1c93aac195d985406f9f0ac37c69ccedfd942da33873df0b646346cfde8aa7f378d83755f8785d6c0d8"
+  // console.log(`gpk is ${gpkP2tr}`)
+  // const publicKey = "04" + hexTrip0x(gpkP2tr)
+
+  // const gpkP2pkh = "0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57"
+  console.log(`gpk is ${gpkP2pkh}`)
+  const publicKey = "04" + hexTrip0x(gpkP2pkh)
+
 
   const alice = ECPair.fromPublicKey(Buffer.from(publicKey, 'hex'), {network, compressed: false})
-  console.log(`gpk is ${gpk}`)
 
   // p2pkh
   const pkh = bitcoin.payments.p2pkh({pubkey: alice.publicKey, network})

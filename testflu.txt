@@ -1,0 +1,46 @@
+1. ota
+
+Leader
+1.1
+  front http://127.0.0.1:9004/api/btc/addAddrInfo  -> apiserver
+
+  apiserver -> scanUtxo
+
+1.2
+  agent apiServerSyncMain('BTC') ->  http://127.0.0.1:9004/api/btc/syncAddrInfo/:beginTime
+  await crossAgent.decodeApiBridgeTx(otaData)
+  content = await crossAgent.getDecodeEventDbData(decodeEvent);
+
+1.3
+  handlerMain()
+    while(1)
+    await monitorHandler()        // leader
+      monitorRecord(record)  -> new StateAction(record) -> .takeAction()  
+        -> "status" : "checkBridgeType"
+        -> "status" : "waitOtaRedeem"
+          sendTrans
+          "03f134e111007c71a9f22d9ec2870ce6a041b2c2f6418ce972caa118df95c6c86d"
+        -> "status" : "waitOtaRedeemConfirming"
+        -> "status" : "waitCross"
+    syncUniMpcRequest()           // 非leader
+
+
+Follower
+1.2
+  agent apiServerSyncMain('BTC') ->  http://127.0.0.1:9004/api/btc/syncAddrInfo/:beginTime
+  await crossAgent.decodeApiBridgeTx(otaData)
+  content = await crossAgent.getDecodeEventDbData(decodeEvent);
+
+1.3
+  handlerMain()
+    while(1)
+    await monitorHandler()        // leader
+      monitorRecord(record)  -> new StateAction(record) -> .takeAction()  
+        -> "status" : "checkBridgeType"
+        -> "status" : "waitOtaRedeem"
+          sendTrans
+          "03f134e111007c71a9f22d9ec2870ce6a041b2c2f6418ce972caa118df95c6c86d"
+        -> "status" : "waitOtaRedeemConfirming"
+            syncMain() -> http://127.0.0.1:9004/api/btc/queryAddrInfo -> apiserver
+            write storemanOTARedeemEvent[{}]
+    syncUniMpcRequest()           // 非leader

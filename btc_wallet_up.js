@@ -96,15 +96,15 @@ const importDescriptorByFetch = async(info) => {
 
   const headers = {
     'content-type': 'text/plain',
-    // 'Authorization': 'Basic ' + Buffer.from('wanglu:Wanchain888').toString('base64'),
+    'Authorization': 'Basic ' + Buffer.from('wanglu:Wanchain888').toString('base64'),
   }
 
   const methodName = 'importdescriptors'
   const params = `[[{"desc": "${info.descriptor}", "timestamp": "now"}]]`
   const data = `{ "jsonrpc": "1.0", "id": "curltext", "method": "${methodName}", "params": ${params} }`
 
-  // const url = 'http://127.0.0.1:18443/'
-  const url = 'http://wanglu:Wanchain888@127.0.0.1:18443/'
+  const url = 'http://127.0.0.1:18443/'
+  // const url = 'http://wanglu:Wanchain888@127.0.0.1:18443/'
   const options =  {
     method: "POST",
     headers: headers,
@@ -211,13 +211,16 @@ const upToDescriptors = async() => {
     const info = await client.getDescriptorInfo(desc)
     // console.log(`get descriptor info ${JSON.stringify(info, null, 2)}`)
 
-    await importDescriptorByRequest(info)
+    // await importDescriptorByRequest(info)
+    await importDescriptorByFetch(info)
   }
 }
 
 setTimeout(async ()=> {
   console.log('*** begin')
   await init()
+
+  const auth = client.auth
   await upToDescriptors()
   console.log('*** end')
 }, 0)
