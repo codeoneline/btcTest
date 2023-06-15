@@ -1,7 +1,10 @@
 const bitcoin = require('bitcoinjs-lib');
+const bitcoin613 = require('bitcoinjs-lib613')
 const Client = require('bitcoin-core')
 const ECPAIR = require('ecpair');
 const { testnet } = require('bitcoinjs-lib/src/networks');
+const otaConfig = require('./ota-config')
+const crypto = require('crypto')
 
 const options = {
   testnet: {
@@ -47,11 +50,19 @@ function hexAdd0x(hexs) {
   return hexs;
 }
 
-function getHash(id, user) {
+function getHash1(id, user) {
   const hash = bitcoin.crypto.sha256(hexAdd0x(id) + user)
   return hexTrip0x(hash.toString('hex'))
 }
 
+function getHash(randomId, userAccount) {
+  const hash = crypto.createHash('sha256');
+  hash.update(hexAdd0x(randomId) + userAccount);
+  let ret = hash.digest('hex');
+  // console.log('getHash randomId = %s userAccount=%s hash(randomId,userAccount)', randomId, userAccount, ret);
+
+  return hexTrip0x(ret);
+}
 const toXOnly = pubKey => {
   if (!(pubKey instanceof Buffer)) {
     return null
@@ -114,6 +125,9 @@ function hexTrip0x(hexs) {
 
 function getOtaP2shRedeemScript(randomId, userAccount, MPC_PK) {
   let randomHash = getHash(randomId, userAccount);
+  let randomHash1 = getHash(randomId.slice(2), userAccount.slice(2));
+  let randomHash2 = getHash1(randomId, userAccount);
+  let randomHash3 = getHash1(randomId.slice(2), userAccount.slice(2));
   let pkBuffer = MPC_PK instanceof Buffer ? MPC_PK : Buffer.from(MPC_PK, 'hex') 
   if (MPC_PK.length === 64) {
     pkBuffer = Buffer.concat([Buffer(4), pkBuffer])
@@ -257,12 +271,15 @@ const testGetAddress = async (compressed = true) => {
 // p2tr smg script path spend = tb1p97lc6zfzyv9wzahpq6ktykltmpuhta48l9t6rwpa77xf9ch6lwlqn628ap, length = 62
 // p2tr ota script path spend = tb1px25ern5cte676f8eft679cc4w5hvkmfsmfqr7246tc52rxjy4nys787lcp, length = 62
 
-const wanAddress = '0x34aABB238177eF195ed90FEa056Edd6648732014'
-const rndId = '0x2096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
-const gpkP2pkh = '0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57'
+// const wanAddress = '0x34aABB238177eF195ed90FEa056Edd6648732014'
+// const rndId = '0x4096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
+// const gpkP2pkh = '0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57'
 // p2pkh = mvqKUF6jQhv6JszEJ4QkTtS4h7tgpjVQ89, length = 34 
 // p2sh = 2N8spV8DBdAMTKpdVKCSeayMvZUZPQoqaQB, length = 35
 
+
+const wanAddress = '0x063b43522DefcCB3eBea669490262F223f679dCc'
+const rndId = '0x1900e5900bb0a4b3828ee5e5101fc2c8f88ace7e5da496657ee9c436f98ce3bb'
 const testGetGpkAddress = async () => {
   // const aliceKeyPair = ECPair.fromPrivateKey(Buffer.from('1ae0ed26d71c7c5178347edc69f2336388b12e1f1a6d6306754fed8263c8a878', 'hex'), {network, compressed: false})
   // const publicKey = aliceKeyPair.publicKey.toString('hex')
@@ -272,6 +289,11 @@ const testGetGpkAddress = async () => {
   // const publicKey = "04" + hexTrip0x(gpkP2tr)
 
   // const gpkP2pkh = "0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57"
+
+
+  // const gpkP2pkh = '0x9172264501caccf904c4ffd1817c32d1813914090a73c6f8220793434bce554f99c51be84cb0fa063bd97fe2eec34a37389621de3edaa7d93d9594ad0175a57e'
+  const gpkP2pkh = '0x35ae2e7d4c281eb94ba22a592cb76f398ea55c6cc8ff02e7ce1e9e2345a66376f4d6de08fed8b7562ee7cdc880661c70451d42b7c250eb490c089db505693fb0'
+
   console.log(`gpk is ${gpkP2pkh}`)
   const publicKey = "04" + hexTrip0x(gpkP2pkh)
 

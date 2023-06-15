@@ -20,10 +20,15 @@ cd ~/13552128609/mpc-batch-shell/jacob_ds_btc_ok/admin
 
 # db.event.update({"hashX" : "0xc607214e5bdb4ddb59b76d20ebb86367233bf2fbb4f1213b8aff65f325c9b83d"}, {$set:{"toHtlcAddr": "tb1pgkx9txtgg5x6m7wm8cpzh8qshmr4y5zvcg06u2lzhd56tnm5e2csy3ruxs"}})
 
-db.event.update({"hashX" : "0x893a722d8a1a6ecec9d4401f6831a04d128b9442264adbf7ff7f99bb24d51c2c"}, {$unset: { "failReason": "", "failAction": "" }})
-db.event.update({"hashX" : "0x893a722d8a1a6ecec9d4401f6831a04d128b9442264adbf7ff7f99bb24d51c2c"}, {$set: { "status": "waitOtaRedeemConfirming" }})
+db.event.update({"hashX" : "0x6e8b838938a36da10a3e6fabd972abb8fa03cde50e440775911fe652e1cb3c9d"}, {$unset: { "failReason": "", "failAction": "" }})
+db.event.update({"hashX" : "0x6e8b838938a36da10a3e6fabd972abb8fa03cde50e440775911fe652e1cb3c9d"}, {$set: { "status": "waitOtaRedeem" }})
 
 
+
+https://blockstream.info/testnet/tx/9cd151e71e2199137112ab13808858aa7bfba454ba615e3adaf577693133dea0?expand
+https://blockstream.info/testnet/tx/b9b454acb72178193d3ade9d9a1797ed7332a0b21b677f4a57c1410083370997?expand
+https://blockstream.info/testnet/tx/174c957067ccbaf3eeec5b2035dd9d1a85a524189a5085745fc97d0b3419fb29?expand
+https://blockstream.info/testnet/tx/9cd151e71e2199137112ab13808858aa7bfba454ba615e3adaf577693133dea0?expand
 
 
 # /var/lib/mongodb

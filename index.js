@@ -82,6 +82,17 @@ function addAddrInfo() {
     "networkFee": "0.0001",
     "value": "120000"
   }
+//   { 
+//     "chainAddr": "0x8b157B3fFEAD48C8a4CDC6bddBE1C1D170049Da4", 
+//     "chainType": "WAN", 
+//     "networkFee": "0.0001", 
+//     "oneTimeAddr": "tb1pfkx6x9vurde8q2kpvu2x3surjw3l6ggzzpnr2e2hlhl3gmyn0rnqd0jwsv", 
+//     "randomId": "0xadbc3bb034f5f0ba275e065134d1f04481a12d1c27c96465d8ce03460a08f784", 
+//     "smgId": "0x000000000000000000000000000000000000000000000000006465765f313236", 
+//     "smgPublicKey": "0x1758d8c707f973496a640cabcdec5ef833a883b5f08624bba7ba14d87b50c57105f8adf0c91b83b4f43284941d0d38651af1c325b90904c40fea3ef371e5da53", 
+//     "tokenPairId": "15", 
+//     "value": "100000" 
+// }
 
   // hashX: 1082084cdcde1a6322d2a27061671d85e52b2bf3be03ab06f851db6175b156a2
   // getHash(data.randomId, data.chainAddr)
@@ -93,25 +104,25 @@ function addAddrInfo() {
 
 
 // const wanAddress = '0x34aABB238177eF195ed90FEa056Edd6648732014'
-// const rndId = '0x2096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
+// const rndId = '0x3096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b'
 // const gpkP2pkh = '0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57'
 // p2pkh = mvqKUF6jQhv6JszEJ4QkTtS4h7tgpjVQ89, length = 34 
 // p2sh = 2N8spV8DBdAMTKpdVKCSeayMvZUZPQoqaQB, length = 35
 function addAddrInfoOld() {
   const url = apiHome + "btc/addAddrInfo"
   const data = {
-    "oneTimeAddr": "2N8spV8DBdAMTKpdVKCSeayMvZUZPQoqaQB",
-    "randomId": "0x2096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b",
+    "oneTimeAddr": "2NBB2seaMjMxNpPEDwZY2out1ob2TFFRAZu",
+    "randomId": "0x4096125c5f89d4a29869f526415b6bf0818b6697b34c02f65361a0046d211f1b",
     "chainType": "WAN",
     "chainAddr": "0x34aABB238177eF195ed90FEa056Edd6648732014",
     "smgPublicKey": "0x4dd7ac4596dc87a266d559b4b2c53b8b340522ce3d21443f9f3b19ec532571b0d140b91b47a68c3758196614f6d523792dd5c7fd7e25647b5507e8d6a21ffd57",
     "smgId": "0x000000000000000000000000000000000000000000000000006a73775f303033",
     "tokenPairId": "15",
     "networkFee": "0.0001",
-    "value": "130000"
+    "value": "20000"
   }
 
-  // hashX: 1082084cdcde1a6322d2a27061671d85e52b2bf3be03ab06f851db6175b156a2
+  // hashX: 108/usr/share/code/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html2084cdcde1a6322d2a27061671d85e52b2bf3be03ab06f851db6175b156a2
   // getHash(data.randomId, data.chainAddr)
 
   // {"success":true,"apiServerNetworkFee":"0.0001"}

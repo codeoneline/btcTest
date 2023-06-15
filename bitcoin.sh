@@ -68,7 +68,6 @@ bitcoin-cli -rpcconnect=127.0.0.1:18443 -rpcpassword=Wanchain888 -rpcuser=wanglu
 
 
 bitcoin-cli -rpcconnect=127.0.0.1:18443 -rpcpassword=Wanchain888 -rpcuser=wanglu -rpcwallet=""  importdescriptors '[{ "desc": "rawtr(713800a4441652b2e3829a3f36ce54e88eb6d780841c54ee7c42a5395ec1fe83)#pu2v43ha", "timestamp": 0}]'
-
 bitcoin-cli -rpcconnect=127.0.0.1:18443 -rpcpassword=Wanchain888 -rpcuser=wanglu -rpcwallet="" importdescriptors '[{"desc":"addr(bcrt1pp375ce9lvxs8l9rlsl78u4szhqa7za748dfhtjj5ht05lufu4dwsshpxl6)#ngm593tu","timestamp":"now"}]'
 bitcoin-cli -rpcconnect=127.0.0.1:18443 -rpcpassword=Wanchain888 -rpcuser=wanglu -rpcwallet="" getdescriptorinfo "addr(bcrt1pp375ce9lvxs8l9rlsl78u4szhqa7za748dfhtjj5ht05lufu4dwsshpxl6)#ngm593tu"
 

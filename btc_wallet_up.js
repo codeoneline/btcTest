@@ -4,7 +4,9 @@
 const bitcoin = require('bitcoinjs-lib');
 const Client = require('bitcoin-core')
 const ECPAIR = require('ecpair')
-const axios = require('axios')
+const ecc = require('tiny-secp256k1');
+bitcoin.initEccLib(ecc)
+const ECPair = ECPAIR.ECPairFactory(ecc)
 
 process.on('uncaughtException', error => {
   console.log(`uncaughtException ${error}`)
@@ -14,10 +16,10 @@ process.on('unhandledRejection', error => {
   console.log(`unhandledRejection ${error}`)
 });
 
-const options = {
+const oldOptions = {
   testnet: {
     network: 'testnet',
-    host: "52.40.34.234",
+    host: "35.164.78.133",
     port: 36893,
     username: 'wanglu',
     password: 'Wanchain888'
@@ -38,60 +40,22 @@ const options = {
   }
 }
 
-const usedNetwork = "testnet"
-const btcConfig = options[usedNetwork]
-
-
-let ecc = null
-let client = null
-let ECPair = null
-async function init(){
-  ecc = await import('tiny-secp256k1');
-  bitcoin.initEccLib(ecc)
-  ECPair = ECPAIR.ECPairFactory(ecc)
-  client = new Client(btcConfig)
-}
-
-const initAxios = () => {
-  axios.interceptors.request.use(function (config) {
-    console.log('请求参数：', config);
-    return config;
-  }, error => {
-    return Promise.reject(error);
-  });
-  axios.interceptors.response.use(function (response) {
-    console.log('返回结果：', response);
-    return response;
-  }, error => {
-    console.log('返回错误：', error);
-    const response = error.response;
-    return Promise.reject(error);
-  });
-}
-
-const importDescriptorByAxios = async(info) => {
-  const headers = {
-    'content-type': 'text/plain',
-  }
-  const url = 'http://52.40.34.234:36893/'
-  const methodName = 'importdescriptors'
-  const params = `[[{"desc": "${info.descriptor}", "timestamp": ${pay.time} }]]`
-  const body = `{ "jsonrpc": "1.0", "id": "curltext", "method": "${methodName}", "params": ${params} }`
-  const auth = {
+const newOptions = {
+  testnet: {
+    network: 'testnet',
+    host: "52.40.34.234",
+    port: 36893,
     username: 'wanglu',
-    password: 'Wanchain888',
-  }
-  const res = await axios.post(url, body, { auth, headers })
-
-  if (res.status === 200) {
-    if (!res.data.error) {
-      console.log(`import descriptors info ${JSON.stringify(res.data.result) }`)
-      return res.data.result
-    }
+    password: 'Wanchain888'
   }
 }
 
-const importDescriptorByFetch = async(info) => {
+const usedNetwork = "testnet"
+const network = bitcoin.networks[usedNetwork]
+const oldClient = new Client(oldOptions[usedNetwork])
+const newClient = new Client(newOptions[usedNetwork])
+
+const importDescriptorByFetch = async(infos, fromTime) => {
   const fetch = require('node-fetch')
 
   const headers = {
@@ -100,11 +64,21 @@ const importDescriptorByFetch = async(info) => {
   }
 
   const methodName = 'importdescriptors'
-  const params = `[[{"desc": "${info.descriptor}", "timestamp": "now"}]]`
+  
+  let params = "[["
+  infos.forEach(info => {
+    if (params.length > 2) {
+      params += ','
+    }
+    const param = fromTime === "now" ?  `{"desc": "${info.descriptor}", "timestamp": "now", "label": "${info.label}"}` : `{"desc": "${info.descriptor}", "timestamp": ${fromTime}, "label": "${info.label}"}`
+    params += param
+  }) 
+  params += "]]"
+   
   const data = `{ "jsonrpc": "1.0", "id": "curltext", "method": "${methodName}", "params": ${params} }`
 
-  const url = 'http://127.0.0.1:18443/'
-  // const url = 'http://wanglu:Wanchain888@127.0.0.1:18443/'
+  // const url = 'http://127.0.0.1:18443/'
+  const url = `http://${newOptions[usedNetwork].host}:${newOptions[usedNetwork].port}/`
   const options =  {
     method: "POST",
     headers: headers,
@@ -119,108 +93,64 @@ const importDescriptorByFetch = async(info) => {
 
 }
 
-const importDescriptorByRequestPromise = async(info) => {
-  const rq = require('request-promise')
-  const headers = {
-    'content-type': 'text/plain',
-    'Authorization': 'Basic ' + Buffer.from('wanglu:Wanchain888').toString('base64'),
-  }
-
-  const methodName = 'importdescriptors'
-  const params = `[[{"desc": "${info.descriptor}", "timestamp": "now"}]]`
-
-  const data = `{ "jsonrpc": "1.0", "id": "curltext", "method": "${methodName}", "params": ${params} }`
-
-  const body =  {
-    // url: `http://wanglu:Wanchain888@127.0.0.1:18443/`,
-    url: `http://127.0.0.1:18443/`,
-    method: "POST",
-    headers: headers,
-    body: data
-  }
-  const res = await rq(body)
-  if (!res.error) {
-    console.log(`import descriptors info ${JSON.stringify(JSON.parse(res).result)}`)
-    return JSON.parse(res).result
-  }
-}
-
-const importDescriptorByRequest = async(info) => {
-  const rq = require('request')
-  const headers = {
-    'content-type': 'text/plain',
-    'Authorization': 'Basic ' + Buffer.from('wanglu:Wanchain888').toString('base64'),
-  }
-
-  const methodName = 'importdescriptors'
-  const params = `[[{"desc": "${info.descriptor}#1", "timestamp": "now"}]]`
-
-  const data = `{ "jsonrpc": "1.0", "id": "curltext", "method": "${methodName}", "params": ${params} }`
-
-  const body =  {
-    // url: `http://wanglu:Wanchain888@127.0.0.1:18443/`,
-    url: `http://127.0.0.1:18443/`,
-    method: "POST",
-    headers: headers,
-    body: data
-  }
-  rq(body, function(error, res, body) {
-    if (!error && body.length > 0) {
-      console.log(`import descriptors info ${JSON.stringify(JSON.parse(body).result)}`)
-      const rt = JSON.parse(body)
-      if (!rt.error) {
-        const results = rt.result
-        for (let i = 0; i < results.length; i ++) {
-          const rs = results[i]
-          if (rs.success) {
-            // 成功
-            console.log(`success ${JSON.stringify(rs.success)}`)
-            // success [{"success":true}]
-            return rs.success
-          } else {
-            // error [{"success":false,"error":{"code":-5,"message":"Address is not valid"}}]
-            return rs.error
-          }
-        }
-      }
+const importAllToNewWallet = async() => {
+  const all = await oldClient.listAddressGroupings()
+  // const fromTime = 'now'
+  const fromTime = Math.round(new Date().getTime() / 1000) - 30 * 24 * 3600
+  const infos = []
+  for (let k in all) {
+    for (let j in all[k]) {
+      const pay = all[k][j]
+      console.log(`try import ${pay}`)
+      const desc = `addr(${pay[0]})`
+      const label = pay[2]
+      const info = await newClient.getDescriptorInfo(desc)
+      info.label = label
+      infos.push(info)
     }
-  })
+  }
+
+  await importDescriptorByFetch(infos, fromTime)
 }
 
-const upToDescriptors = async() => {
-  // const all = await oldClient.listAddressGroupings()
-  const all = [
-    // {
-    //   address: 'tb1qhra5az5e0eukh4lhwxx8lz5v6x8gl890s2q3u7', // testnet
-    //   time: 'now',
-    // },
-    // {
-    //   address: 'tb1qkk6xh7dfh7sqa66a0z02etdtfmgk6y0eq7k34e',
-    //   time: 'now',
-    // },
-    {
-      // address: 'n4E7xShkNG71GZg5b5PHPpWYuGHN4kggR1', // testnet
-      address: '2NFer9f5uZzTMttb6aeYvCyGJeAR3YsNued', // regtest
-      time: 'now',
-    },
+function hexTrip0x(hexs) {
+  if (0 == hexs.indexOf('0x')) {
+      return hexs.slice(2);
+  }
+  return hexs;
+}
+
+const importSomeToNewWallet = async() => {
+  // gpkDetails.push({ index: 0, curve: '1', alg: '1', gpk: storemanConfig.gpk1})
+  // gpkDetails.push({ index: 1, curve: '0', alg: '0', gpk: storemanConfig.gpk2})
+  // 注意， 选gpk2
+  const allStoreMan = [
+    "0xc81f6bb5f8142bb4b27be46176fc1206321c7a6b78c29766e78b394bdfd4b110c25a531d339b9516381e8a10f1f1736ce741bde9c110b164b8c1a008011c58ac",
+    "0x0ee694c18938358e9751ce529bec588acbedd75d43830661c2aa33f3c34a340705ea9a01964f39f5b085447bab3f49609b7165659aa674e1f17a88f14f2d82ae",
+    "0x16d5b0180a2344bd36aa2c972fb5947b2be7e1fc6832007e4fabeea224de5b5a7a5f8409620447f7ef21e4da0111b9e839fa597902e79169ec6d2db528e511d4",
+    "0x5e1c5cdc75df6a1842a8bd957deeb8ebf84ab4239cc7a421619683f5c056ebe5f89554bc6195fec6962996da3ea67ce7c6f0a013105fa6d55c99724434946868"
   ]
 
-  for (let k in all) {
-    const pay = all[k]
-    const desc = `addr(${pay.address})`
-    const info = await client.getDescriptorInfo(desc)
-    // console.log(`get descriptor info ${JSON.stringify(info, null, 2)}`)
-
-    // await importDescriptorByRequest(info)
-    await importDescriptorByFetch(info)
+  // const fromTime = 'now'
+  const fromTime = Math.round(new Date().getTime() / 1000) - 30 * 24 * 3600
+  const infos = []
+  for (let k in allStoreMan) {
+    const gpk = allStoreMan[k]
+    const publicKey = "04" + hexTrip0x(gpk)
+    const alice = ECPair.fromPublicKey(Buffer.from(publicKey, 'hex'), {network, compressed: false})
+    const p2pkh = bitcoin.payments.p2pkh({pubkey: alice.publicKey, network})
+    console.log(`try import ${p2pkh.address}`)
+    const desc = `addr(${p2pkh.address})`
+    const info = await newClient.getDescriptorInfo(desc)
+    info.label = ""
+    infos.push(info)
   }
+  await importDescriptorByFetch(infos, fromTime)
 }
 
 setTimeout(async ()=> {
   console.log('*** begin')
-  await init()
 
-  const auth = client.auth
-  await upToDescriptors()
+  await importSomeToNewWallet()
   console.log('*** end')
 }, 0)

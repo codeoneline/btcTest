@@ -249,7 +249,7 @@ async function spendByPsbt(opt) {
     .addInput({
       hash: opt.txid,
       index: opt.vout,
-      // nonWitnessUtxo: Buffer.from(rawTx.hex, 'hex')
+      nonWitnessUtxo: Buffer.from(rawTx.hex, 'hex')
     }) 
     // .addInput({
     //   hash: opt1.txid,
@@ -265,7 +265,7 @@ async function spendByPsbt(opt) {
       value: opt.amount,
     })
 
-    const isMpc = true
+    const isMpc = false
     if (isMpc) {
       const keyPair = {
         publicKey: opt.sender.publicKey,
@@ -1261,6 +1261,8 @@ async function spendByTransaction(opt) {
 
     let inputIndex = 0
     let sigHash = tx.hashForSignature(inputIndex, redeemScript, hashType)
+    const raw = tx.toBuffer()
+    const tx1 = bitcoin.Transaction.fromBuffer(raw)
     let signature = opt.sender.sign(sigHash, hashType)
     let sig = bitcoin.script.signature.encode(signature, hashType)
     let sigWithPubkey = bitcoin.payments.p2sh({ 
@@ -1517,11 +1519,11 @@ const sendBtcByPsbt = async (compressed = true) => {
         value: utxo.value,
         sender: alice,
         receiver: {
-          address: "2N8spV8DBdAMTKpdVKCSeayMvZUZPQoqaQB",
+          address: "myPEHVPXGgkkfsq1WGUgrP6g5bgk5VLnAy",
         },
-        amount: 130000,
+        amount: 1,
         fee: 155,
-        txType: 'p2wpkh',
+        txType: 'p2pkh',
         bCompressed: true,
       }
     )
@@ -1728,9 +1730,9 @@ const testBtcData = async () => {
 setTimeout(async() => {
   await init()
   // await sendBtc()
-  // await sendBtcByPsbt(true)
+  await sendBtcByPsbt(true)
   // await sendBtcByPsbt(false)
-  await sendBtcByTransaction(false)
+  // await sendBtcByTransaction(false)
 
   // await testBtcData()
 }, 0)
